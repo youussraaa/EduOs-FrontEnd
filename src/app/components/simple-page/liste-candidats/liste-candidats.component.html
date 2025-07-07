@@ -1,0 +1,471 @@
+<!-- <app-breadcrumb [title]="'Candidats'"></app-breadcrumb> -->
+<div class="card card-body border-0 px-0 px-lg-2 py-2" style="background-color: transparent" id="searchBar">
+  <div class="col-12 pt-2 pb-0">
+    <form class="d-block d-lg-flex flex-lg-column justify-content-center col-12 px-xl-2 px-2 px-lg-0 px-xl-2">
+      <div class="row col-12 px-0 mx-0">
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-0 px-1">
+          <input type="date" [(ngModel)]="searchParams.Cnd_DateCandidature" class="form-control" name="SrchDate" id="SrchDate" aria-describedby="helpId" placeholder="Date" />
+        </div>
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-0 px-1">
+          <select [(ngModel)]="searchParams.Niv_Id" class="form-select" name="SrchNiveau" id="SrchNiveau">
+            <option value="00000000-0000-0000-0000-000000000000" selected>Toutes les niveaux</option>
+            <!-- Option par défaut -->
+            <option *ngFor="let niveau of Enums.Niveaux" [value]="niveau.Niv_Id">{{ niveau.Niv_Nom }}</option>
+          </select>
+        </div>
+
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-0 px-1">
+          <input type="search" [(ngModel)]="searchParams.Cnd_Nom" class="form-control" name="SrchNom" id="SrchNom" aria-describedby="helpId" placeholder="Nom" />
+        </div>
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-0 px-1">
+          <input type="search" [(ngModel)]="searchParams.Cnd_Prenom" class="form-control" name="SrchPrenom" id="SrchPrenom" aria-describedby="helpId" placeholder="Prenom" />
+        </div>
+        <div class="form-group col-11 col-lg-2 mb-2 ms-lg-0">
+          <button type="button" id="getDataBtn1" class="btn btn-info text-center me-1" data-bs-toggle="tooltip" data-placement="bottom" [title]="'Rechercher' | translate" (click)="charger()">
+            Rechercher
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="container-fluid basic_table" >
+  <div class="row" id="cardbody">
+    <div class="col-sm-12 col-xl-12">
+      <div class="card" >
+        <div class="card-body">
+          <div class="d-flex justify-content-end mb-2">
+            <button class="btn btn-primary" type="button" title="Ajouter candidat" (click)="dialogCandidat.StartAddCandidat(formulaireModal)">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+          <ul ngbNav #nav="ngbNav" [(activeId)]="active3" (navChange)="onNavChange1($event)" class="nav-tabs">
+            <li [ngbNavItem]="1">
+              <a ngbNavLink>En Attentes</a>
+              <ng-template ngbNavContent>
+                <div class="table-responsive">
+                  <table class="table fixed_header">
+                    <thead>
+                      <tr>
+                        <th>Photo</th>
+                        <th>Niveau</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Sexe</th>
+                        <th>Date de candidature</th>
+                        <th>Numéro de candidature</th>
+
+                        <th>Ecole origine</th>
+                        <!-- <th>CIN</th> -->
+
+                        <th>Date de naissance</th>
+                        <th>Lieu de naissance</th>
+                        <th>Adresse</th>
+                        <th>Téléphone</th>
+                        <!-- <th>Email</th> -->
+                        <th style="width: 150px">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="CandidatEnAttente == null || CandidatEnAttente.length == 0">
+                        <td colspan="13" class="text-center fst-italic">Aucun candidat chargé</td>
+                      </tr>
+                      <tr *ngFor="let candidat of CandidatEnAttente; let i = index">
+                        <td><img src="../../../../assets/images/user/user.png" alt="Photo" class="img" width="50" /></td>
+                        <td>{{ candidat.Niv_Nom }}</td>
+                        <td>{{ candidat.Cnd_Nom }}</td>
+                        <td>{{ candidat.Cnd_Prenom }}</td>
+                        <td>{{ candidat.Sex_Nom }}</td>
+                        <td>{{ candidat.Cnd_DateCandidature | date : "dd/MM/yyyy" }}</td>
+                        <td>{{ candidat.Cnd_NumCandidature }}</td>
+                        <td>{{ candidat.Cnd_EcoleOrigine }}</td>
+                        <!-- <td>{{ candidat.Cnd_CIN }}</td> -->
+                        <td>{{ candidat.Cnd_DateNaissance | date : "dd/MM/yyyy" }}</td>
+                        <td>{{ candidat.Cnd_LieuNaissance }}</td>
+                        <td>{{ candidat.Cnd_Adresse }}</td>
+                        <td>{{ candidat.Cnd_Tel }}</td>
+                        <!-- <td>{{ candidat.Cnd_Mail }}</td> -->
+                        <td style="width: 150px">
+                          <a class="text-success fs-5 mx-2 point-cursor" title="Accepter le candidat" (click)="dialogCandidat.AcceptRejeterCandidat(candidat.Cnd_Id, true,acceptModal)">
+                            <i class="fa fa-check"></i>
+                          </a>
+                          <a class="text-danger fs-5 mx-2 point-cursor" title="Refuser le candidat" (click)="dialogCandidat.AcceptRejeterCandidat(candidat.Cnd_Id, false,null)">
+                            <i class="fa fa-close"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+              <a ngbNavLink>Refusés</a>
+              <ng-template ngbNavContent>
+                <div class="table-responsive">
+                  <table class="table fixed_header">
+                    <thead>
+                      <tr>
+                        <th>Photo</th>
+                        <th>Niveau</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Sexe</th>
+                        <th>Date de candidature</th>
+                        <th>Numéro de candidature</th>
+                        <th>Ecole origine</th>
+                        <!-- <th>CIN</th> -->
+
+                        <th>Date de naissance</th>
+                        <th>Lieu de naissance</th>
+                        <th>Adresse</th>
+                        <th>Téléphone</th>
+                        <!-- <th>Email</th> -->
+                        <!-- <th>Remarque</th> -->
+                        <th style="width: 150px">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="CandidatsRefuser == null || CandidatsRefuser.length == 0">
+                        <td colspan="13" class="text-center fst-italic">Aucun candidat chargé</td>
+                      </tr>
+                      <tr *ngFor="let candidat of CandidatsRefuser; let i = index">
+                        <td><img src="../../../../assets/images/user/user.png" alt="Photo" class="img" width="50" /></td>
+                        <td>{{ candidat.Niv_Nom }}</td>
+                        <td>{{ candidat.Cnd_Nom }}</td>
+                        <td>{{ candidat.Cnd_Prenom }}</td>
+                        <td>{{ candidat.Sex_Nom }}</td>
+                        <td>{{ candidat.Cnd_DateCandidature | date : "dd/MM/yyyy" }}</td>
+                        <td>{{ candidat.Cnd_NumCandidature }}</td>
+                        <td>{{ candidat.Cnd_EcoleOrigine }}</td>
+                        <!-- <td>{{ candidat.Cnd_CIN }}</td> -->
+                        <td>{{ candidat.Cnd_DateNaissance | date : "dd/MM/yyyy" }}</td>
+                        <td>{{ candidat.Cnd_LieuNaissance }}</td>
+                        <td>{{ candidat.Cnd_Adresse }}</td>
+                        <td>{{ candidat.Cnd_Tel }}</td>
+                        <!-- <td>{{ candidat.Cnd_Mail }}</td> -->
+                        <!-- <td>{{ student.Etd_Remarque }}</td> -->
+
+                        <td style="width: 150px">
+                          <a class="text-success fs-5 mx-2 point-cursor" title="Accepter le candidat" (click)="dialogCandidat.AcceptRejeterCandidat(candidat.Cnd_Id, true, acceptModal)">
+                            <i class="fa fa-check"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="3">
+              <a ngbNavLink>Acceptés</a>
+              <ng-template ngbNavContent>
+                <div class="table-responsive">
+                  <table class="table fixed_header">
+                    <thead>
+                      <tr>
+                        <th>Photo</th>
+                        <th>Niveau</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Sexe</th>
+                        <th>Date de candidature</th>
+                        <th>Numéro de candidature</th>
+                        <th>Ecole origine</th>
+                        <th>Date de naissance</th>
+                        <th>Lieu de naissance</th>
+                        <th>Adresse</th>
+                        <th>Téléphone</th>
+                        <!-- <th style="width: 150px;">Actions</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="CandidatAdmis == null || CandidatAdmis.length == 0">
+                        <td colspan="13" class="text-center fst-italic">Aucun candidat chargé</td>
+                      </tr>
+                      <tr *ngFor="let candidat of CandidatAdmis; let i = index">
+                        <td><img src="../../../../assets/images/user/user.png" alt="Photo" class="img" width="50" /></td>
+                        <td>{{ candidat.Niv_Nom }}</td>
+                        <td>{{ candidat.Cnd_Nom }}</td>
+                        <td>{{ candidat.Cnd_Prenom }}</td>
+                        <td>{{ candidat.Sex_Nom }}</td>
+                        <td>{{ candidat.Cnd_DateCandidature | date : "dd/MM/yyyy" }}</td>
+                        <td>{{ candidat.Cnd_NumCandidature }}</td>
+                        <td>{{ candidat.Cnd_EcoleOrigine }}</td>
+                        <td>{{ candidat.Cnd_DateNaissance | date : "dd/MM/yyyy" }}</td>
+                        <td>{{ candidat.Cnd_LieuNaissance }}</td>
+                        <td>{{ candidat.Cnd_Adresse }}</td>
+                        <td>{{ candidat.Cnd_Tel }}</td>
+                        <!-- <td style="width: 150px;">
+                          <a class="text-info fs-5 mx-2 point-cursor" title="Voir les détails" ">
+                            <i class="fa fa-eye"></i>
+                          </a>
+                        </td> -->
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </ng-template>
+            </li>
+          </ul>
+          <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal pour Accepter le candidat et sélectionner la classe -->
+<ng-template #acceptModal let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title">Inscrire le Candidat dans une classe</h2>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div>
+      <label for="classe">Sélectionner la classe</label>
+      <select id="classe" class="form-control" [(ngModel)]="dialogCandidat.selectedClasseAnnee">
+        <option *ngFor="let classeannee of Enums.ClasseAnnee" [value]="classeannee.ClasseAnn_Id">{{ classeannee.Cls_Nom }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annuler</button>
+    <button type="button" class="btn btn-primary" (click)="dialogCandidat.saveClassForStudent(modal)">Enregistrer</button>
+  </div>
+</ng-template>
+
+
+
+<ng-template #formulaireModal let-modal>
+  <div class="modal-header">
+    <h2 *ngIf="dialogCandidat.currentStep === 1" class="modal-title">Candidat</h2>
+    <h2 *ngIf="dialogCandidat.currentStep === 2" class="modal-title">Tuteur(s)</h2>
+  </div>
+
+  <!-- Stepper Container -->
+  <div class="modal-body">
+    <div *ngIf="dialogCandidat.newCandidat" class="stepper">
+      <div *ngIf="dialogCandidat.currentStep === 1">
+        <div class="row mb-3">
+          <div class="col">
+            <label for="niveau">Niveau :</label>
+            <select class="form-control" id="niveau" [(ngModel)]="dialogCandidat.newCandidat.Niv_Id" name="niveau">
+              <option *ngFor="let niveau of Enums.Niveaux" [value]="niveau.Niv_Id">{{ niveau.Niv_Nom }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="addCndNom" class="form-label">Nom</label>
+            <input type="text" id="addCndNom" class="form-control" [(ngModel)]="dialogCandidat.newCandidat.Cnd_Nom" name="addCndNom" />
+          </div>
+          <div class="col">
+            <label for="Cnd_Prenom" class="form-label">Prénom</label>
+            <input type="text" id="Cnd_Prenom" class="form-control" [(ngModel)]="dialogCandidat.newCandidat.Cnd_Prenom" name="Cnd_Prenom" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="sexe">Sexe :</label>
+            <select class="form-control" id="sexe" [(ngModel)]="dialogCandidat.newCandidat.Sex_Id" name="typeSexe">
+              <option *ngFor="let typeSexe of TypeSexeList" [value]="typeSexe.key">{{ typeSexe.libelle }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="addDateNaissance" class="form-label">Date de naissance</label>
+            <input type="date" id="addDateNaissance" class="form-control" [(ngModel)]="dialogCandidat.newCandidat.Cnd_DateNaissance" name="addDateNaissance" />
+          </div>
+          <div class="col">
+            <label for="addLieuNaissance" class="form-label">Lieu de naissance</label>
+            <input type="text" id="addLieuNaissance" class="form-control" [(ngModel)]="dialogCandidat.newCandidat.Cnd_LieuNaissance" name="addLieuNaissance" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="addEcoleOrigine" class="form-label">Ecole Origine</label>
+            <input type="text" id="addEcoleOrigine" class="form-control" [(ngModel)]="dialogCandidat.newCandidat.Cnd_EcoleOrigine" name="addEcoleOrigine" />
+          </div>
+          <div class="col">
+            <label for="addEmail" class="form-label">Email</label>
+            <input type="text" id="addEmail" class="form-control" [(ngModel)]="dialogCandidat.newCandidat.Cnd_Mail" name="addEmail" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="addAdresse" class="form-label">Adresse</label>
+            <input type="text" id="addAdresse" class="form-control" [(ngModel)]="dialogCandidat.newCandidat.Cnd_Adresse" name="addAdresse" />
+          </div>
+          <div class="col">
+            <label for="addTel" class="form-label">Téléphone</label>
+            <input type="text" id="addTel" class="form-control" [(ngModel)]="dialogCandidat.newCandidat.Cnd_Tel" name="addTel" />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col">
+            <label for="addRemarque" class="form-label">Remarque</label>
+            <textarea type="text" id="addRemarque" class="form-control" [(ngModel)]="dialogCandidat.newCandidat.Cnd_Remarque" name="addRemarque"></textarea>
+          </div>
+          <div class="col">
+            <label for="photoUpload">Photo : </label>
+            <input type="file" (change)="dialogCandidat.onImageSelected($event)" id="photoUpload" accept="image/*" name="photoEnseignant" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!-- Bouton conditionnel basé sur hasTuteur -->
+          <button class="btn btn-primary" (click)="dialogCandidat.nextStep()">Suivant</button>
+
+          <!-- <button class="btn btn-primary mt-3" (click)="AddEtudiantTuteur(modal)">Enregistrer</button> -->
+
+          <button type="button" class="btn btn-secondary" (click)="dialogCandidat.Close(modal)">Annuler</button>
+        </div>
+      </div>
+
+      <!-- Deuxième Step -->
+      <div *ngIf="dialogCandidat.currentStep === 2">
+       
+        <div class="container">
+          <!-- Affichage du tableau et du bouton si showForm est faux -->
+          <div *ngIf="!dialogCandidat.showForm">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary" (click)="dialogCandidat.StartAddTutor()"><i class="fa fa-plus"></i></button>
+            </div>
+            <!-- <h3 class="mt-4">Liste des Tuteurs</h3> -->
+            <table class="table table-bordered mt-3">
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Prénom</th>
+                  <th>Tel</th>
+                  <!-- <th>Numéro whatsapp</th> -->
+                  <th>Lien de parenté</th>
+                  <th>Par défaut</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="dialogCandidat.ListTutors == null || dialogCandidat.ListTutors.length == 0">
+                  <td class="text-center" colspan="5" align="center"><i>Aucun tuteur enregistré</i></td>
+                </tr>
+                <tr *ngFor="let tutor of dialogCandidat.ListTutors">
+                  <td>{{ tutor.Tut_Nom }}</td>
+                  <td>{{ tutor.Tut_Prenom }}</td>
+                  <td>{{ tutor.Tut_Tel }}</td>
+                  <!-- <td>{{ tutor.Tut_Tel2 }}</td> -->
+                  <td>{{ tutor.LienParente }}</td>
+                  <td>
+                    <!-- <span *ngIf="tutor.pardefaut" class="badge bg-success">Par défaut</span> -->
+                    <a *ngIf="tutor.Tut_parDefaut" class="text-success fs-5 mx-2">
+                      <i class="fa fa-check"></i>
+                    </a>
+                    <!-- <a *ngIf="!tutor.pardefaut" class="text-danger fs-5 mx-2" >
+                      <i class="fa fa-close"></i>
+                    </a> -->
+                  </td>
+
+                  <td align="center">
+                    <!-- Afficher le bouton si ce n'est pas le tuteur par défaut -->
+                    <!-- <button *ngIf="!tutor.pardefaut" class="btn btn-sm btn-primary" (click)="setDefaultTutor(i)">
+                      Marquer par défaut
+                    </button> -->
+                    <a
+                      [style.visibility]="tutor.Tut_parDefaut ? 'hidden' : 'unset'"
+                      class="text-success fs-5 mx-2"
+                      style="cursor: pointer"
+                      title="marquer par défaut"
+                      (click)="dialogCandidat.setDefaultTutor(tutor.Tut_Id)"
+                    >
+                      <i class="fa fa-check-circle"></i>
+                    </a>
+                    <!-- <button class="btn btn-danger btn-sm" (click)="removeTutor(i)">Supprimer</button> -->
+                    <a class="text-danger fs-5 mx-2" style="cursor: pointer" title="Supprimer tuteur" (click)="dialogCandidat.deleteTutor(tutor.Tut_Id)">
+                      <i class="fa fa-trash"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Affichage du formulaire si showForm est vrai -->
+          <div *ngIf="dialogCandidat.showForm">
+            <form #tutorForm="ngForm">
+              <div class="row mb-3">
+                <div class="col">
+                  <label for="addTutNom" class="form-label">Nom</label>
+                  <input type="text" id="addTutNom" class="form-control" [(ngModel)]="dialogCandidat.newTutor.Tut_Nom" name="addTutNom" />
+                </div>
+                <div class="col">
+                  <label for="Tut_Prenom" class="form-label">Prénom</label>
+                  <input type="text" id="Tut_Prenom" class="form-control" [(ngModel)]="dialogCandidat.newTutor.Tut_Prenom" name="Tut_Prenom" />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col">
+                  <label for="Tut_sexe" class="form-label">Sexe</label>
+                  <select class="form-control" id="Tut_sexe" [(ngModel)]="dialogCandidat.newTutor.Tut_Sex_Id" name="Tut_sexe">
+                    <option *ngFor="let typeSexe of TypeSexeList" [value]="typeSexe.key">{{ typeSexe.libelle }}</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <label for="Tut_Tel" class="form-label">Téléphone</label>
+                  <input type="text" id="Tut_Tel" class="form-control" [(ngModel)]="dialogCandidat.newTutor.Tut_Tel" name="Tut_Tel" />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <!-- <div class="col">
+                  <label for="Tut_Tel2" class="form-label">Numéro whatsapp</label>
+                  <input type="text" id="Tut_Tel2" class="form-control" [(ngModel)]="dialogCandidat.newTutor.Tut_Tel2" name="Tut_Tel2" />
+                </div> -->
+                <div class="col">
+                  <label for="Tut_CIN" class="form-label">CIN</label>
+                  <input type="text" id="Tut_CIN" class="form-control" [(ngModel)]="dialogCandidat.newTutor.Tut_CIN" name="Tut_CIN" />
+                </div>
+                <div class="col">
+                  <label for="Tut_Mail" class="form-label">Mail</label>
+                  <input type="text" id="Tut_Mail" class="form-control" [(ngModel)]="dialogCandidat.newTutor.Tut_Mail" name="Tut_Mail" />
+                </div>
+                
+              </div>
+              <div class="row mb-3">
+                
+                <div class="col">
+                  <label for="Tut_Adresse" class="form-label">Adresse</label>
+                  <input type="text" id="Tut_Adresse" class="form-control" [(ngModel)]="dialogCandidat.newTutor.Tut_Adresse" name="Tut_Adresse" />
+                </div>
+                <div class="col">
+                  <label for="Tut_Profession" class="form-label">Profession</label>
+                  <input type="text" id="Tut_Profession" class="form-control" [(ngModel)]="dialogCandidat.newTutor.Tut_Profession" name="Tut_Profession" />
+                </div>
+                
+              </div>
+              <div class="row mb-3">
+                
+                <div class="col">
+                  <label for="LienParente" class="form-label">Lien de parenté</label>
+                  <input type="text" id="LienParente" class="form-control" [(ngModel)]="dialogCandidat.newCandidatTutor.LienParente" name="LienParente" />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div *ngIf="dialogCandidat.showForm" class="modal-footer">
+          <button type="button" class="btn btn-success" (click)="dialogCandidat.addTutor()">Ajouter</button>
+          <button type="button" class="btn btn-secondary ms-2" (click)="dialogCandidat.showForm = false">Annuler</button>
+        </div>
+        <div *ngIf="!dialogCandidat.showForm" class="modal-footer">
+          <button type="button" class="btn btn-success" (click)="dialogCandidat.previousStep()">Retour</button>
+
+          <button type="button" class="btn btn-primary" (click)="dialogCandidat.OnSubmit(modal)">Enregistrer</button>
+
+          <button type="button" class="btn btn-secondary" (click)="dialogCandidat.Close(modal)">Annuler</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

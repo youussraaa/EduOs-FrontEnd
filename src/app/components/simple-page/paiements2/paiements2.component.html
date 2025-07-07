@@ -1,0 +1,502 @@
+<!-- <app-breadcrumb [title]="'Paiement'" active_item="Paiement"></app-breadcrumb> -->
+<div *ngIf="showSearchParams" id="searchBar" class="card card-body border-0 px-0 px-lg-2 py-2" style="background-color: transparent">
+  <div class="col-12 pt-2 pb-0">
+    <form class="d-block d-lg-flex flex-lg-column justify-content-center col-12 px-xl-2 px-2 px-lg-0 px-xl-2">
+      <div class="row col-12 px-0 mx-0">
+
+        <div class="form-group col-12 col-lg-3 mb-2 mb-lg-0 px-1">
+          <input type="search" [(ngModel)]="searchParams.Etd_Matricule" class="form-control" name="SrchEtd_Matricule" id="SrchEtd_Matricule" aria-describedby="helpId"
+            placeholder="Matricule" (keydown.enter)="GetData()" />
+        </div>
+        <div class="form-group col-12 col-lg-3 mb-2 mb-lg-2 px-1">
+          <input type="search" [(ngModel)]="searchParams.Etd_Nom" class="form-control" name="SrchEtd_Nom" id="SrchEtd_Nom" aria-describedby="helpId" placeholder="Nom"
+            (keydown.enter)="GetData()" />
+        </div>
+        <div class="form-group col-12 col-lg-3 mb-2 mb-lg-2 px-1">
+          <input type="search" [(ngModel)]="searchParams.Etd_Prenom" class="form-control" name="SrchEtd_Prenom" id="SrchEtd_Prenom" aria-describedby="helpId" placeholder="Prenom"
+            (keydown.enter)="GetData()" />
+        </div>
+        <div class="form-group col-12 col-lg-3 mb-2 mb-lg-2 px-1">
+          <input type="search" [(ngModel)]="searchParams.TelephoneTuteur" class="form-control" name="TelephoneTuteur" id="TelephoneTuteur" aria-describedby="helpId"
+            placeholder="Telephone tuteur" (keydown.enter)="GetData()" />
+        </div>
+
+        <!-- <div class="form-group col-12 col-lg-4 mb-2 mb-lg-2 px-1"></div> -->
+
+        <div class="form-group col-12 col-lg-3 mb-2 mb-lg-2 px-1">
+          <select class="form-control" id="classe" [(ngModel)]="searchParams.Cls_Id" name="classe">
+            <option value="00000000-0000-0000-0000-000000000000">Classe</option>
+            <option *ngFor="let classe of Enums.Classes" [value]="classe.Cls_Id">{{ classe.Cls_Nom }}</option>
+          </select>
+        </div>
+        <div class="form-group col-12 col-lg-3 mb-2 mb-lg-2 px-1">
+          <select class="form-control" id="niveau" [(ngModel)]="searchParams.Niv_Id" name="niveau">
+            <option value="00000000-0000-0000-0000-000000000000">Niveau</option>
+            <option *ngFor="let niveau of Enums.Niveaux" [value]="niveau.Niv_Id">{{ niveau.Niv_Nom }}</option>
+          </select>
+        </div>
+        <div class="form-group col-12 col-lg-3 mb-2 mb-lg-2 px-1">
+          <select class="form-control" id="annee" [(ngModel)]="searchParams.Ann_Id" name="annee">
+            <option value="00000000-0000-0000-0000-000000000000">Année</option>
+            <option *ngFor="let annee of Enums.Annees" [value]="annee.Ann_Id">{{ annee.Ann_Nom }}</option>
+          </select>
+        </div>
+        <div class="form-group col-12 col-lg-2 mb-2 ms-lg-2 px-1">
+          <button type="button" id="getDataBtn1" class="btn btn-primary text-center" data-bs-toggle="tooltip" data-placement="bottom" [title]="'Rechercher'"
+            (click)="GetData()">Rechercher</button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>
+<div class="floating-button">
+  <button class="btn btn-primary rounded-circle text-center button-floating-action" (click)="onFloatingButtonClick()"><i class="fa fa-search"></i></button>
+</div>
+
+<!-- main div -->
+
+<div class="row" [style.height]="dockManagerConfig.height">
+  <div [class]="selectedEtudiant == null ? 'col-lg-12' : 'col-lg-6'">
+    <div class="card student-list-card m-2">
+      <div class="card-header p-3">
+        <div class="d-flex justify-content-between align-items-center">
+          <h4 class="fs-4">
+            Liste des élèves {{ gridEtudiantsConfig.data != null ? '(' + gridEtudiantsConfig.data.length + ')' : '' }}
+            <span *ngIf="CurrentCaisse != null"> - {{ CurrentCaisse.Caisse_Nom }}</span>
+          </h4>
+          <!-- <input type="text" [style.width]="'50%'" class="form-control" (change)="OnFiltreChange($event,'null')" (keyup)="OnFiltreChange($event,'null')"
+              [(ngModel)]="filterParams.global" placeholder="Filtre" /> -->
+
+          <div class="d-flex gap-2">
+
+            <div ngbDropdown class="d-inline-block" placement="bottom">
+              <button class="btn btn-outline-primary" id="gridEtudiantColumns" ngbDropdownToggle>Columns</button>
+              <div ngbDropdownMenu aria-labelledby="gridEtudiantColumns" style="overflow-y: scroll; max-height: 400px; width: 200px;">
+                <div *ngFor="let column of gridEtudiantsConfig.GetEnabledColumns(); let index=index;">
+                  <div class="checkbox pt-1 pb-1 p-2 pr-2" style="color: black;">
+                    <input [id]="'checkbox_0_'+index" type="checkbox" [(ngModel)]="column.visible" />
+                    <label [for]="'checkbox_0_'+index">{{ column.header }}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="card-body p-2">
+        <div class="table-responsive" [style.maxHeight]="gridEtudiantsConfig.height" style="overflow-y: auto;">
+          <table class="table table-hover fixed_header">
+            <thead>
+              <tr class="table-header">
+                <th *ngFor="let column of gridEtudiantsConfig.GetVisibleColumns()" style="color: white; text-align: left;">{{ column.header }}</th>
+              </tr>
+            </thead>
+
+            <tbody *ngIf="gridEtudiantsConfig.data == null">
+              <tr align="center">
+                <th><i>Chargement ...</i></th>
+              </tr>
+            </tbody>
+
+            <tbody *ngIf="gridEtudiantsConfig.data?.length == 0">
+              <tr align="center">
+                <th [attr.colspan]="gridEtudiantsConfig.GetVisibleColumns().length"><i>Aucun élève chargé</i></th>
+              </tr>
+            </tbody>
+
+            <tbody *ngIf="gridEtudiantsConfig.data != null && gridEtudiantsConfig.data.length > 0">
+              <tr *ngFor="let item of gridEtudiantsConfig.data" style="cursor: pointer;" (click)="gridEtudiantsConfig.OnRowClick(item.EtdClasseAnn_Id)"
+                [class.selected-row]="selectedEtudiant?.EtdClasseAnn_Id == item.EtdClasseAnn_Id">
+                <td *ngFor="let column of gridEtudiantsConfig.GetVisibleColumns()"
+                  [style.textAlign]="column.dataType == 'string' ? 'left' : column.dataType == 'number' ? 'right' : column.dataType == 'date' ? 'center' : 'center'">
+
+                  <span [ngSwitch]="column.dataType">
+                    <span *ngSwitchCase="'string'">{{ item[column.field] }}</span>
+                    <span *ngSwitchCase="'number'">
+                      <span *ngIf="column.isMontant">{{ item[column.field] | number:'1.2-2'}}</span>
+                      <span *ngIf="!column.isMontant">{{ item[column.field] }}</span>
+                    </span>
+                    <span *ngSwitchCase="'date'">{{ item[column.field] | date : "dd/MM/yyyy" }}</span>
+                    <span *ngSwitchCase="'boolean'"><span *ngIf="item[column.field] == true"><i class="fa fa-check"></i></span></span>
+                    <span *ngSwitchDefault>{{ item[column.field] }}</span>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right side boxes -->
+  <div class="col-lg-6 col-md-12" *ngIf="selectedEtudiant != null">
+
+    <!-- #region Versements ________________________________________________________________________________ -->
+    <div class="row">
+      <div class="card mt-2 mb-1">
+
+        <div class="card-header p-2">
+
+          <h4 class="fs-4" align="center" *ngIf="gridVersementsConfig.data == null || gridVersementsConfig.data.length == 0">
+            <i>Aucun versement enregistré</i>
+          </h4>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <h3 class="fs-4 mb-0" *ngIf="gridVersementsConfig.data != null && gridVersementsConfig.data.length > 0">
+              Versements {{ this.selectedEtudiant?.Versements != null ? '(' + this.selectedEtudiant?.Versements.length + ')' : '' }}
+            </h3>
+
+            <div class="d-flex gap-2">
+              <button class="btn-primary igx-button igx-button--outlined" style="color: white;" (click)="facturerPaiement(contentFact)" title="Facturer">Facturer</button>
+              <button class="btn-primary igx-button igx-button--outlined" style="color: white;" (click)="dialogReglement.Open(contentAdd)" title="Régler le versement"
+                *ngIf="gridVersementsConfig.data != null && gridVersementsConfig.data.length > 0">Régler <span *ngIf="gridVersementsConfig.selectedRows.length > 0">({{
+                  gridVersementsConfig.selectedRows.length }})</span></button>
+
+              <div ngbDropdown class="d-inline-block" placement="bottom" *ngIf="gridVersementsConfig.data != null && gridVersementsConfig.data.length > 0">
+                <button class="btn btn-outline-primary" id="gridVersementColumns" ngbDropdownToggle>Columns</button>
+                <div ngbDropdownMenu aria-labelledby="gridVersementColumns" style="overflow-y: scroll; max-height: 400px; width: 200px;">
+                  <div *ngFor="let column of gridVersementsConfig.GetEnabledColumns(); let index=index;">
+                    <div class="checkbox pt-1 pb-1 p-2 pr-2" style="color: black;">
+                      <input [id]="'checkbox_1_'+index" type="checkbox" [(ngModel)]="column.visible" />
+                      <label [for]="'checkbox_1_'+index">{{ column.header }}</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <div class="card-body p-2" *ngIf="gridVersementsConfig.data != null && gridVersementsConfig.data.length > 0">
+          <div class="table-responsive" [style.maxHeight]="gridVersementsConfig.height" style="overflow-y: auto;">
+            <table class="table table-hover fixed_header">
+              <thead>
+                <tr class="table-header">
+                  <th *ngFor="let column of gridVersementsConfig.GetVisibleColumns()" style="color: white; text-align: left;">{{ column.header }}</th>
+                  <th></th>
+                </tr>
+              </thead>
+
+              <tbody *ngIf="gridVersementsConfig.data == null">
+                <tr align="center">
+                  <th><i>Chargement ...</i></th>
+                </tr>
+              </tbody>
+
+              <tbody *ngIf="gridVersementsConfig.data?.length == 0">
+                <tr align="center">
+                  <th [attr.colspan]="gridVersementsConfig.GetVisibleColumns().length"><i>Aucun versement trouvé</i></th>
+                </tr>
+              </tbody>
+
+              <tbody *ngIf="gridVersementsConfig.data != null && gridVersementsConfig.data.length > 0">
+                <tr *ngFor="let item of gridVersementsConfig.data" style="cursor: pointer;" (click)="gridVersementsConfig.SelectRow(item.Vers_Id)"
+                  [class.selected-row]="gridVersementsConfig.selectedRows.includes(item.Vers_Id)">
+
+                  <td *ngFor="let column of gridVersementsConfig.GetVisibleColumns()"
+                    [style.textAlign]="column.dataType == 'string' ? 'left' : column.dataType == 'number' ? 'right' : column.dataType == 'date' ? 'center' : 'center'">
+
+                    <span [ngSwitch]="column.dataType">
+                      <span *ngSwitchCase="'string'">{{ item[column.field] }}</span>
+                      <span *ngSwitchCase="'number'">
+                        <span *ngIf="column.isMontant">{{ item[column.field] | number:'1.2-2'}}</span>
+                        <span *ngIf="!column.isMontant">{{ item[column.field] }}</span>
+                      </span>
+                      <span *ngSwitchCase="'date'">{{ item[column.field] | date : "dd/MM/yyyy" }}</span>
+                      <span *ngSwitchCase="'boolean'">
+                        <span *ngIf="item[column.field] == true">
+                          <i class="fa fa-check"></i>
+                        </span>
+                      </span>
+                      <span *ngSwitchDefault>{{ item[column.field] }}</span>
+                    </span>
+                  </td>
+                  <td>
+                    <div (click)="deleteVersement(item.Vers_Id)" title="Supprimer le versement">
+                      <i class="fa fa-trash text-danger fs-5 mx-2 point-cursor"></i>
+                    </div>
+                    <div (click)="dialogEditVersement.Open(item.Vers_Id,DialogEditVersement)" title="Modifier le versement">
+                      <i class="fa fa-edit text-warning fs-5 mx-2 point-cursor"></i>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- #endregion Versements ________________________________________________________________________________ -->
+
+    <!-- #region Operations ________________________________________________________________________________ -->
+    <div class="row">
+      <div class="card mt-2 mb-2">
+        <div class="card-header p-2" *ngIf="gridOperationsConfig.data == null || gridOperationsConfig.data.length == 0">
+          <h4 class="fs-4" align="center"><i>Aucune opération enregistrée</i></h4>
+        </div>
+
+        <div class="card-header p-2 d-flex justify-content-between align-items-center" *ngIf="gridOperationsConfig.data != null && gridOperationsConfig.data.length > 0">
+          <h3 class="fs-4">Operations {{ selectedEtudiant?.Operations != null ? '(' + selectedEtudiant?.Operations.length + ')' : '' }}</h3>
+
+          <div class="d-flex gap-2">
+            <div ngbDropdown class="d-inline-block" placement="bottom" *ngIf="gridOperationsConfig.data != null && gridOperationsConfig.data.length > 0">
+              <button class="btn btn-outline-primary" id="gridOperationColumns" ngbDropdownToggle>Columns</button>
+              <div ngbDropdownMenu aria-labelledby="gridOperationColumns" style="overflow-y: scroll; max-height: 400px; width: 200px;">
+                <div *ngFor="let column of gridOperationsConfig.GetEnabledColumns(); let index=index;">
+                  <div class="checkbox pt-1 pb-1 p-2 pr-2" style="color: black;">
+                    <input [id]="'checkbox_2_'+index" type="checkbox" [(ngModel)]="column.visible" />
+                    <label [for]="'checkbox_2_'+index">{{ column.header }}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="card-body p-2" *ngIf="gridOperationsConfig.data != null && gridOperationsConfig.data.length > 0">
+          <div class="table-responsive" [style.maxHeight]="gridVersementsConfig.height" style="overflow-y: auto;">
+            <table class="table table-hover fixed_header">
+
+              <thead>
+                <tr class="table-header">
+                  <th *ngFor="let column of gridOperationsConfig.GetVisibleColumns()" style="color: white; text-align: left;">{{ column.header }}</th>
+                  <th></th>
+                </tr>
+              </thead>
+
+              <tbody *ngIf="gridOperationsConfig.data != null && gridOperationsConfig.data.length > 0">
+                <tr *ngFor="let item of gridOperationsConfig.data" style="cursor: pointer;">
+
+                  <td *ngFor="let column of gridOperationsConfig.GetVisibleColumns()"
+                    [style.textAlign]="column.dataType == 'string' ? 'left' : column.dataType == 'number' ? 'right' : column.dataType == 'date' ? 'center' : 'center'">
+
+                    <span [ngSwitch]="column.dataType">
+                      <span *ngSwitchCase="'string'">{{ item[column.field] }}</span>
+                      <span *ngSwitchCase="'number'">
+                        <span *ngIf="column.isMontant">{{ item[column.field] | number:'1.2-2'}}</span>
+                        <span *ngIf="!column.isMontant">{{ item[column.field] }}</span>
+                      </span>
+                      <span *ngSwitchCase="'date'">{{ item[column.field] | date : "dd/MM/yyyy" }}</span>
+                      <span *ngSwitchCase="'boolean'">
+                        <span *ngIf="item[column.field] == true">
+                          <i class="fa fa-check"></i>
+                        </span>
+                      </span>
+                      <span *ngSwitchDefault>{{ item[column.field] }}</span>
+                    </span>
+                  </td>
+
+                  <td style="width: 150px;">
+                    <a class="text-warning fs-5 mx-2 point-cursor" (click)="dialogReglements.Open(item.Ope_Id, DialogReglements)" title="Détails des paiements du versement">
+                      <i class="fa fa-info-circle"></i>
+                    </a>
+                    <a class="text-info fs-5 mx-2 point-cursor" title="Générer le reçu" (click)="genereRecu(item.Ope_Id)">
+                      <i class="fa fa-file"></i>
+                    </a>
+                    <a class="text-danger fs-5 mx-2 point-cursor" (click)="deleteOperation(item.Ope_Id)" title="Supprimer l'opération">
+                      <i class="fa fa-trash"></i>
+                    </a>
+                  </td>
+
+                </tr>
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- #endregion Operations ________________________________________________________________________________ -->
+
+  </div>
+</div>
+
+<!-- #region dialogReglements ________________________________________________________________________________ -->
+<ng-template #DialogReglements let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title fs-4">Details de l'opération</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dialogReglements.Close(modal)"></button>
+  </div>
+  <div class="modal-body">
+    <table class="table table-hover">
+      <thead>
+        <tr class="table-header">
+          <th style="color: white">Versement</th>
+          <th style="color: white">Remarque</th>
+          <th style="color: white">Date d'opération</th>
+          <th style="color: white">Montant</th>
+          <!-- <th style="color: white">Actions</th> -->
+        </tr>
+      </thead>
+      <!-- <tbody *ngIf="selectedOperation.Reglements.length > 0">
+        <tr style="cursor: pointer" *ngFor="let reglement of selectedOperation.Reglements">
+          <td>{{ reglement.Vers_Nom }}</td>
+          <td>{{ reglement.Regl_Remarque }}</td>
+          <td>{{ reglement.Ope_Date | date : "dd/MM/yyyy" }}</td>
+          <td>{{ reglement.Regl_Montant | number : "1.2-2" }} FCFA</td>
+        </tr>
+      </tbody> -->
+
+      <tbody *ngIf="dialogReglements.reglements.length > 0">
+        <tr style="cursor: pointer" *ngFor="let reglement of dialogReglements.reglements">
+          <td>{{ reglement.Vers_Nom }}</td>
+          <td>{{ reglement.Regl_Remarque }}</td>
+          <td>{{ reglement.Ope_Date | date : "dd/MM/yyyy" }}</td>
+          <td>{{ reglement.Regl_Montant | number : "1.2-2" }} FCFA</td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="dialogReglements.reglements.length === 0">
+        <tr>
+          <td colspan="5" class="text-center">Aucun régelemnt effectué</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="dialogReglements.Close(modal)">Close</button>
+  </div>
+</ng-template>
+<!-- #endregion dialogReglements ________________________________________________________________________________ -->
+
+<!-- #region dialogReglements ________________________________________________________________________________ -->
+<ng-template #contentAdd let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title fs-4">Réglement</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body" *ngIf="dialogReglement.newOperation != null">
+    <form>
+      <div class="row">
+        <div class="col-6">
+          <div class="col mb-2">
+            <label for="opeMontant" class="form-label">Montant de l'opération</label>
+            <input type="number" id="opeMontant" class="form-control" [(ngModel)]="dialogReglement.newOperation.Ope_Montant" name="opeMontant"  />
+          </div>
+          <div class="col mb-2">
+            <label for="modePaiement" class="form-label">Mode de paiement</label>
+            <select class="form-control" id="modePaiement" [(ngModel)]="dialogReglement.newOperation.ModePai_Id" name="modePaiement">
+              <option *ngFor="let mode of Enums.ModePaiements" [value]="mode.ModPai_Id">{{ mode.ModPai_Nom }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="col mb-2">
+            <label for="opeDate" class="form-label">Date de l'opération</label>
+            <input type="date" id="opeDate" class="form-control" [(ngModel)]="dialogReglement.newOperation.Ope_Date" name="opeDate" />
+          </div>
+          <div class="col mb-2">
+            <label for="opeDescription" class="form-label">Description</label>
+            <textarea id="opeDescription" class="form-control" [(ngModel)]="dialogReglement.newOperation.Ope_Description" name="opeDescription"></textarea>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success" (click)="dialogReglement.Submit(modal)">Ajouter</button>
+    <button type="button" class="btn btn-danger" (click)="dialogReglement.Close(modal)">Fermer</button>
+  </div>
+</ng-template>
+<!-- #endregion dialogReglements ________________________________________________________________________________ -->
+
+<ng-template #contentFact let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title fs-4">Facturation de l'élève: <b>{{ selectedEtudiant?.Etd_Nom }} {{ selectedEtudiant?.Etd_Prenom }}</b></h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="row">
+        <div class="col-12">
+          <!-- <h4>Facturables</h4> -->
+          <table class="table table-responsive">
+            <thead>
+              <tr>
+                <th scope="col">Sélectionner</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Montant</th>
+                <th scope="col">Niveau</th>
+                <th scope="col">Fiche</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of FacturableByEtudiantClasseAnnee">
+                <td>
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input" [id]="item.Fact_Id" (change)="onCheckboxChange($event, item)"
+                      [checked]="isFacturableSelected(item.FactFicheFact_Id)" />
+                  </div>
+                </td>
+                <td>{{ item.Fact_Nom }}</td>
+                <td>{{ item.FactFichFact_Montant | number : "1.2-2" }} FCFA</td>
+                <td>{{ item.Niv_Nom }}</td>
+                <td>{{ item.FichFact_Nom }}</td>
+                <td>{{ item.FichFact_Description }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success" (click)="Facturer(modal)">Ajouter</button>
+    <button type="button" class="btn btn-danger" (click)="CloseOperation(modal)">Close</button>
+  </div>
+</ng-template>
+
+<!-- #region DialogEditVersement ________________________________________________________________________________ -->
+<ng-template #DialogEditVersement let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title fs-4">Modifier Versement</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dialogEditVersement.Close(modal)"></button>
+  </div>
+  <div class="modal-body">
+    <form *ngIf="dialogEditVersement.versement != null">
+      <div class="row mb-3">
+        <div class="col">
+          <label for="addVersNom" class="form-label">Versement</label>
+          <input type="text" id="addVersNom" class="form-control" [(ngModel)]="dialogEditVersement.versement.Vers_Nom" name="addVersNom" />
+        </div>
+        <div class="col">
+          <label for="addVersDate" class="form-label">Date prévu</label>
+          <input type="date" id="addVersDate" class="form-control" [(ngModel)]="dialogEditVersement.versement.Vers_Dateprevu" name="addVersDate" />
+        </div>
+      </div>
+      
+      <div class="row mb-3">
+        <div class="col">
+          <label for="addVersMontant" class="form-label">Montant</label>
+          <input type="text" class="form-control" id="addVersMontant" [(ngModel)]="dialogEditVersement.versement.Vers_Montant" name="addVersMontant" disabled/>
+        </div>
+        <div class="col">
+          <label for="addVersRemise" class="form-label">Remise</label>
+          <input type="number" id="addVersRemise" class="form-control" [(ngModel)]="dialogEditVersement.versement.Vers_Remise" name="addVersRemise" [min]="0" [max]="dialogEditVersement.versement.Vers_Montant || 0"/>
+        </div>
+        
+        
+      </div>
+      
+      <div class="row mb-3">
+        
+        <div class="col">
+          <label for="addVersRemarque" class="form-label">Remarque</label>
+          <textarea type="text" id="addVersRemarque" class="form-control" [(ngModel)]="dialogEditVersement.versement.Vers_Remarque" name="addVersRemarque" ></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success" (click)="dialogEditVersement.EditVersement(modal)">Modifier</button>
+    <button type="button" class="btn btn-danger" (click)="dialogEditVersement.Close(modal)">Close</button>
+  </div>
+</ng-template>
+<!-- #endregion DialogEditVersement ________________________________________________________________________________ -->

@@ -1,0 +1,299 @@
+<!-- <app-breadcrumb [title]="'Classes Ouverte'"></app-breadcrumb> -->
+
+<div class="container-fluid">
+  <!-- Tables -->
+  <!-- <div class="row">
+    <div class="col mb-3">
+      <div class="card student-list-card">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <div></div>
+            <button class="btn btn-primary" type="button" (click)="openAddClasseAnnee(addClasseAnneeModal)">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="card-body" >
+          <table class="table table-hover">
+            <thead>
+              <tr class="table-header">
+                <th>Classe</th>
+                <th>Niveau</th>
+                <th>Annee</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="cursor: pointer" *ngFor="let classeannee of ClasseAnnee">
+                <td>{{ classeannee.Cls_Nom }}</td>
+                <td>{{ classeannee.Niv_Nom }}</td>
+                <td>{{ classeannee.Ann_Nom }}</td>
+                <td>
+                  <a style="cursor: pointer" (click)="openEditClasseAnnee(classeannee, editClasseAnneeModal)" class="fs-2 text-primary mx-2">
+                    <i class="fa fa-bars"></i>
+                  </a>
+                  <a style="cursor: pointer" (click)="deleteClasseAnnee(classeannee)" class="fs-2 text-danger mx-2">
+                    <i class="fa fa-trash"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <div class="row" [style.height]="gridConfig.height">
+    <div class="card student-list-card m-2">
+      <div class="card-header p-2">
+        <div class="d-flex justify-content-between align-items-center">
+          <h4 class="fs-4">{{ gridConfig.title }} {{ gridConfig.data != null && gridConfig.data.length > 0 ? '(' + gridConfig.data.length + ')' : '' }}</h4>
+          <!-- <input type="text" [style.width]="'50%'" class="form-control" (change)="OnFiltreChange($event,'null')" (keyup)="OnFiltreChange($event,'null')" [(ngModel)]="filterParams.global" placeholder="Filtre" /> -->
+  
+          <div class="d-flex gap-2">
+            <button class="btn-primary igx-button igx-button--outlined" title="Ouvrir une classe" type="button" (click)="dialogClasseAnnee.Open(addClasseAnneeModal)">
+              <i style="color: white" class="fa fa-plus"></i>
+            </button>
+  
+            <button type="button" class="igx-button igx-button--outlined ng-star-inserted" (click)="Exporter()" title="Exporter">
+              <!-- <i class="far fa-file-excel"></i> -->
+               Exporter
+            </button>
+  
+            <div ngbDropdown class="d-inline-block" placement="bottom">
+              <button class="btn btn-outline-primary" id="gridEtudiantColumns" ngbDropdownToggle>Columns</button>
+              <div ngbDropdownMenu aria-labelledby="gridEtudiantColumns" style="overflow-y: scroll; max-height: 400px; width: 200px;">
+                <div *ngFor="let column of gridConfig.GetEnabledColumns(); let index=index;">
+                  <div class="checkbox pt-1 pb-1 p-2 pr-2" style="color: black;">
+                    <input [id]="'checkbox_0_'+index" type="checkbox" [(ngModel)]="column.visible" />
+                    <label [for]="'checkbox_0_'+index">{{ column.header }}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+          </div>
+        </div>
+      </div>
+      <div class="card-body p-2">
+        <div class="table-responsive" [style.maxHeight]="gridConfig.height" style="overflow-y: auto;">
+          <table class="table table-hover fixed_header">
+            <thead>
+              <tr class="table-header">
+                <th *ngFor="let column of gridConfig.GetVisibleColumns()" style="color: white; text-align: left;">{{ column.header }}</th>
+                <th ></th>
+              </tr>
+            </thead>
+
+            <tbody *ngIf="gridConfig.data == null">
+              <tr align="center">
+                <th><i>Chargement ...</i></th>
+              </tr>
+            </tbody>
+
+            <tbody *ngIf="gridConfig.data?.length == 0">
+              <tr align="center">
+                <th [attr.colspan]="gridConfig.GetVisibleColumns().length+1"><i>Aucune classe ouverte chargé</i></th>
+              </tr>
+            </tbody>
+
+            <tbody *ngIf="gridConfig.data != null && gridConfig.data.length > 0">
+              <tr *ngFor="let item of gridConfig.data" style="cursor: pointer;" >
+                <td *ngFor="let column of gridConfig.GetVisibleColumns()"
+                  [style.textAlign]="column.dataType == 'string' ? 'left' : column.dataType == 'number' ? 'right' : column.dataType == 'date' ? 'center' : 'center'">
+
+                  <span [ngSwitch]="column.dataType">
+                    <span *ngSwitchCase="'string'">{{ item[column.field] }}</span>
+                    <span *ngSwitchCase="'number'">
+                      <span *ngIf="column.isMontant">{{ item[column.field] | number:'1.2-2'}}</span>
+                      <span *ngIf="!column.isMontant">{{ item[column.field] }}</span>
+                    </span>
+                    <span *ngSwitchCase="'date'">{{ item[column.field] | date : "dd/MM/yyyy" }}</span>
+                    <span *ngSwitchCase="'boolean'"><span *ngIf="item[column.field] == true"><i class="fa fa-check"></i></span></span>
+                    <span *ngSwitchDefault>{{ item[column.field] }}</span>
+                  </span>
+                </td>
+                <td>
+                  <a style="cursor: pointer" title="Détails classe année" (click)="dialogClasseAnneeMatieres.Open(item, editClasseAnneeModal)" class="fs-5 text-primary mx-2">
+                    <i class="fa fa-bars"></i>
+                  </a>
+                  <a style="cursor: pointer" title="Supprimer classe année" (click)="deleteClasseAnnee(item)" class="fs-5 text-danger mx-2">
+                    <i class="fa fa-trash"></i>
+                  </a>
+                </td>
+              </tr>
+             
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal for Editing Class -->
+<ng-template #editClasseAnneeModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title fs-4">Affecter les enseignants</h5>
+
+    <button type="button" class="btn-close" aria-label="Close" (click)="dialogClasseAnneeMatieres.Close(modal)"></button>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" type="button" title="Ajouter candidat" (click)="dialogClasseAnneeMatieres.StartAddMatiere(addMatiere)">
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+    <div class="table-responsive">
+      <table class="table fixed_header">
+        <thead>
+          <tr>
+            <th>Classe</th>
+            <th>Matière</th>
+            <th>Enseignant</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody >
+          <tr *ngIf="dialogClasseAnneeMatieres.ClasseAnneeMatieres == null || dialogClasseAnneeMatieres.ClasseAnneeMatieres.length == 0">
+            <th colspan="11"><i>Aucun enseignant affecter dans cette classe</i></th>
+          </tr>
+          <tr *ngFor="let ClsAnnMat of dialogClasseAnneeMatieres.ClasseAnneeMatieres; let i = index">
+            <td>{{ ClsAnnMat.Cls_Nom }}</td>
+            <td>{{ ClsAnnMat.Mat_Nom }}</td>
+            <td>{{ ClsAnnMat.Ens_Nom }} {{ ClsAnnMat.Ens_Prenom }}</td>
+            <td>{{ ClsAnnMat.Description }}</td>
+            <td>
+              <a
+                class="text-warning fs-5 mx-2 point-cursor"
+                title="Modifier Affectation Enseignant"
+                (click)="dialogClasseAnneeMatieres.StartEditEnseignant(openAffectationEnsClsModal, ClsAnnMat.ClsAnnMat_Id)"
+              >
+                <i class="fa fa-edit"></i>
+              </a>
+              <!-- <a class="text-danger fs-4 mx-2 point-cursor" title="Supprimer étudiant" (click)="deleteEtudiantClasseAnnee(parcours)">
+                <i class="fa fa-trash"></i>
+              </a> -->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="dialogClasseAnneeMatieres.Close(modal)">Fermer</button>
+  </div>
+</ng-template>
+<ng-template #openAffectationEnsClsModal let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title">Modifier {{ dialogClasseAnneeMatieres.ClasseAnneeMatiereToEdit?.Mat_Nom }}</h2>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dialogClasseAnneeMatieres.CloseEditEnseignant(modal)"></button>
+  </div>
+  <div class="modal-body" *ngIf="dialogClasseAnneeMatieres.ClasseAnneeMatiereToEdit != null">
+    <div class="row mb-3">
+      <label for="classe">Enseignant</label>
+      <select id="classe" class="form-control" [(ngModel)]="dialogClasseAnneeMatieres.ClasseAnneeMatiereToEdit.Ens_Id">
+        <!-- <option value="">Aucun</option> -->
+        <option *ngFor="let Ens of Enseignants" [value]="Ens.Ens_Id">{{ Ens.Ens_Nom }} {{ Ens.Ens_Prenom }}</option>
+      </select>
+    </div>
+    <!-- <div class="row mb-3">
+      <div class="col">
+        <label for="desc" class="form-label">Description</label>
+        <input type="desc" id="desc" class="form-control" [(ngModel)]="dialogClasseAnneeMatieres.ClassAnnee.Description" name="addTel" />
+      </div>
+    </div> -->
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="dialogClasseAnneeMatieres.CloseEditEnseignant(modal)">Annuler</button>
+    <button type="button" class="btn btn-primary" (click)="dialogClasseAnneeMatieres.SubmitEditEnseignant(modal)">Enregistrer</button>
+  </div>
+</ng-template>
+<!-- Modal for Adding Class -->
+<ng-template #addClasseAnneeModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title fs-4">Ouverture de classe</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body modal-dialog-scrollable">
+    <!-- Étape 1 : Message de bienvenue -->
+    <div *ngIf="dialogClasseAnnee.currentStep === 1">
+      <p>Veuillez suivre choisir une année</p>
+      <div class="form-group mt-3">
+        <label for="annee">Année</label>
+        <select class="form-control" id="annee" [(ngModel)]="dialogClasseAnnee.selectedAnnee" name="annee">
+          <option *ngFor="let annee of GetAnnee" [value]="annee.Ann_Id">{{ annee.Ann_Nom }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Étape 2 : Formulaire original -->
+    <div *ngIf="dialogClasseAnnee.currentStep === 2" class="table-container">
+      <div class="table-container">
+        <table class="table table-hover">
+          <thead>
+            <tr class="table-header">
+              <th style="width: 20%">
+                <input id="ToutSelc" type="checkbox" [(ngModel)]="selectAll" (change)="dialogClasseAnnee.toggleAllSelections()" />
+                <label for="ToutSelc" class="ms-2"> Tout sélectionner</label>
+              </th>
+              <th>Classe</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="cursor: pointer; width: 20%" *ngFor="let classe of dialogClasseAnnee.ClasseAOuvrir" (click)="classe.selected = !classe.selected">
+              <td><input type="checkbox" [(ngModel)]="classe.selected" (click)="$event.stopPropagation()" /></td>
+              <td>{{ classe.Cls_Nom }}</td>
+              <td>{{ classe.Classe_Description }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" *ngIf="dialogClasseAnnee.currentStep === 2" (click)="dialogClasseAnnee.goToStep(1)">Précédent</button>
+    <button type="button" class="btn btn-primary" (click)="dialogClasseAnnee.nextStep(modal)">
+      {{ dialogClasseAnnee.currentStep === 1 ? "Suivant" : "Enregistrer" }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #addMatiere let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title fs-4">Ajouter Matières</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dialogClasseAnneeMatieres.CloseAddMatiere(modal)"></button>
+  </div>
+  <div class="modal-body" *ngIf="dialogClasseAnneeMatieres.newClasseAnneeMatiere != null">
+    <div class="row mb-3">
+      <div class="col">
+        <label for="niveau">Matière :</label>
+        <select class="form-control" id="niveau" [(ngModel)]="dialogClasseAnneeMatieres.newClasseAnneeMatiere.Mat_Id" name="niveau">
+          <option value="">Aucune</option>
+          <option *ngFor="let mat of Matieres" [value]="mat.Mat_Id">{{ mat.Mat_Nom }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col">
+        <label for="classe">Enseignant :</label>
+        <select class="form-control" id="ens" [(ngModel)]="dialogClasseAnneeMatieres.newClasseAnneeMatiere.Ens_Id" name="ens">
+          <option value="">Aucun</option>
+          <option *ngFor="let Ens of Enseignants" [value]="Ens.Ens_Id">{{ Ens.Ens_Nom }} {{ Ens.Ens_Prenom }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col">
+        <label for="MatDescription" class="form-label">Description</label>
+        <textarea type="text" id="MatDescription" class="form-control" [(ngModel)]="dialogClasseAnneeMatieres.newClasseAnneeMatiere.Description" name="MatDescription"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="dialogClasseAnneeMatieres.SubmitAddMatiere(modal)">Enregistrer</button>
+
+    <button type="button" class="btn btn-secondary" (click)="dialogClasseAnneeMatieres.CloseAddMatiere(modal)">Fermer</button>
+  </div>
+</ng-template>

@@ -1,0 +1,76 @@
+/* Style pour la page entière avec l'image en arrière-plan */
+.page-background {
+  position: relative;
+  background-image: url("https://img.freepik.com/vecteurs-libre/hand-drawn-retour-au-fond-ecole_23-2149464866.jpg"); /* Assurez-vous que l'image est dans le bon chemin */
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Filtre sombre (overlay) */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6); /* 60% d'opacité noire */
+  z-index: 1;
+}
+
+/* Style pour le conteneur du formulaire */
+.form-container {
+  position: relative;
+  z-index: 2; /* Met le formulaire au-dessus du filtre */
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 1000px;
+}
+
+/* Style des champs du formulaire */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Style du bouton */
+.btn-submit {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background-color: #45a049;
+}
+
+/* Pour responsive */
+@media (max-width: 600px) {
+  .form-container {
+    width: 90%; /* Le formulaire occupe 90% de la largeur sur mobile */
+    max-width: 100%; /* Supprime la limite de largeur maximale pour les petits écrans */
+    padding: 20px; /* Réduit légèrement le padding pour les petits écrans */
+  }
+}

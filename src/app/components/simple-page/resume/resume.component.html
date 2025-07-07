@@ -1,0 +1,132 @@
+<app-breadcrumb [title]="'Résumé'"></app-breadcrumb>
+<div class="card-body default-accordion">
+
+  <!-- <table class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th rowspan="2" style="position: relative;"><div style="margin: 0; position: absolute; top: 45%;">design</div></th>
+        <th rowspan="2" style="position: relative;"><div style="margin: 0; position: absolute; top: 45%;">desc</div></th>
+        <th colspan="2">detail</th>
+      </tr>
+      <tr>
+        <th>detail-montant</th>
+        <th>detail-desc</th>
+      </tr>                
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="4">fiche1</td>
+        <td rowspan="4">fiche1----</td>
+      </tr>
+      <tr>
+        <td>montant-2</td>
+        <td>desc-2</td>
+      </tr>
+      <tr>
+        <td>montant-2</td>
+        <td>desc-2</td>
+      </tr>
+      <tr>
+        <td>montant-2</td>
+        <td>desc-2</td>
+      </tr>
+    </tbody>
+  </table> -->
+
+  <div ngbAccordion>
+    <div ngbAccordionItem class="mt-3 shadow-sm" *ngFor="let level of resumeConfig">
+      <h2 ngbAccordionHeader>
+        <button ngbAccordionButton class="bg-primary text-white d-flex justify-content-between align-items-center">
+          <span><i class="fa fa-book fs-5 px-2"></i> Niveau : {{ level.Niv_Nom }}</span>
+        </button>
+      </h2>
+      <div ngbAccordionCollapse>
+        <div ngbAccordionBody>
+          <ng-template>
+            <!-- Classes Section -->
+            <h3 class="fs-5 text-primary">Classes :</h3>
+            <div *ngIf="level.Classes.length > 0; else noClasses">
+              <ul class="list-unstyled ps-3">
+                <li class="fs-6 mb-2" *ngFor="let classe of level.Classes"><i class="fa fa-users"></i> {{ classe.Cls_Nom }}</li>
+              </ul>
+            </div>
+            <ng-template #noClasses>
+              <p class="fs-6 text-muted">Aucune classe enregistrée</p>
+            </ng-template>
+
+            <!-- Matières Section -->
+            <h3 class="fs-5 text-primary mt-4">Discipline :</h3>
+            <table class="table table-bordered table-striped table-hover">
+              <thead>
+                <tr>
+                  <th >Désignation</th>
+                  <th >Description</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="level.Matieres.length > 0">
+                <tr *ngFor="let matiere of level.Matieres">
+                  <td>{{ matiere.Mat_Nom }}</td>
+                  <td>{{ matiere.Mat_Description }}</td>
+                </tr>
+              </tbody>
+              <tbody *ngIf="level.Matieres.length === 0">
+                <tr>
+                  <td colspan="2" class="text-center">Aucune Discipline enregistrée</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Fiches Facturation Section -->
+            <h3 class="fs-5 text-primary mt-4">Fiches Facturation :</h3>
+            
+
+            <table class="table table-bordered table-striped table-hover">
+              <thead>
+                <tr>
+                  <th >Désignation</th>
+                  <!-- <th>Année</th> -->
+                  <th >Description</th>
+                  <th class="text-center">Détails</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="level.FicheFacturations.length > 0">
+                <tr *ngFor="let FicheFacturation of level.FicheFacturations">
+                  <td>{{ FicheFacturation.FichFact_Nom }}</td>
+                  <td>{{ FicheFacturation.FichFact_Description }}</td>
+                  <td colspan="2">
+                    <table class="table table-sm table-bordered">
+                      <thead>
+                        <tr>
+                          <th class="text-center">Montant</th>
+                          <th class="text-center">Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let facturable of FicheFacturation.FacturableFicheFacturation">
+                          <td>{{ facturable.FactFichFact_Montant | number:'1.2-2'}} FCFA</td>
+                          <td>{{ facturable.FactFichFact_Description }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+              <tbody *ngIf="level.FicheFacturations.length === 0">
+                <tr>
+                  <td colspan="4" class="text-center">Aucune fiche de facturation enregistrée</td>
+                </tr>
+              </tbody>
+            </table>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card-footer text-end mt-3">
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary me-3" type="submit" routerLink="../enseignants-matiere">Retour</button>
+    <button class="btn btn-success me-3" type="submit" routerLink="../lien">Terminer</button>
+  </div>
+</div>

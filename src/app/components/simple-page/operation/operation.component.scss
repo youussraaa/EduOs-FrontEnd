@@ -1,0 +1,65 @@
+/* Core Data Grid CSS */
+@import 'ag-grid-community/styles/ag-grid.css';
+/* Quartz Theme Specific CSS */
+@import 'ag-grid-community/styles/ag-theme-alpine.css';
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+
+
+
+.point-cursor {
+    cursor: pointer;
+  }
+  
+  .fixed_header thead {
+    position: sticky;
+    top: 0;
+    background-color: #ffffff; /* Choisissez la couleur de fond en fonction de votre design */
+    // z-index: 1000; /* Assurez-vous que l'en-tête reste au-dessus des autres éléments */
+    // box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.4); /* Optionnel : ajoute une ombre */
+  }
+  
+  .fixed_header th, .fixed_header td {
+    // padding: 8px;
+    text-align: center;
+    // border: 1px solid #ddd;
+  }
+  
+  /* Pour s'assurer que le défilement ne dépasse pas les limites */
+  .table-responsive {
+    max-height: 620px; /* Ajustez selon la hauteur souhaitée */
+    overflow-y: auto;
+  }
+  
+  .table-versementoperation{
+    max-height: 290px; /* Ajustez selon la hauteur souhaitée */
+    overflow-y: auto;
+  }
+  
+  .grid-container {
+    height: calc(100vh - 250px); // Ajustez cette valeur selon votre header/footer
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .grid {
+    width: 100%;
+    height: 100%;
+  }
+  
+  ::ng-deep {
+    .igx-grid__tbody {
+      height: 100%;
+    }
+  }
+  
+  .searchCount {
+    margin-right: 10px;
+    font-size: 0.875rem;
+    color: #666;
+  }
+  
+  .searchButtons {
+    display: inline-flex;
+    gap: 5px;
+  }

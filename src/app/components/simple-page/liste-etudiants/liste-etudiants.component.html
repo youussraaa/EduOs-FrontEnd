@@ -1,0 +1,596 @@
+<!-- <app-breadcrumb [title]="'Élèves'"></app-breadcrumb> -->
+<div class="card card-body border-0 px-0 px-lg-2 py-2" style="background-color: transparent;">
+  <div class="col-12 pt-2 pb-0">
+    <form class="d-block  d-lg-flex flex-lg-column justify-content-center col-12 px-xl-2 px-2 px-lg-0 px-xl-2">
+      <div class="row col-12 px-0 mx-0">
+
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-0 px-1">
+          <input type="search" [(ngModel)]="searchParams.Etd_Nom" class="form-control" name="SrchNom" id="SrchNom" aria-describedby="helpId" placeholder="Nom"
+            (keydown.enter)="GetData()">
+        </div>
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-0 px-1">
+          <input type="search" [(ngModel)]="searchParams.Etd_Prenom" class="form-control" name="SrchPrenom" id="SrchPrenom" aria-describedby="helpId" placeholder="Prenom"
+            (keydown.enter)="GetData()">
+        </div>
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-0 px-1">
+          <input type="search" [(ngModel)]="searchParams.Etd_Matricule" class="form-control" name="SrchMatricule" id="SrchMatricule" aria-describedby="helpId"
+            placeholder="Matricule" (keydown.enter)="GetData()">
+        </div>
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-0 px-1">
+          <input type="search" [(ngModel)]="searchParams.TelephoneTuteur" class="form-control" name="TelephoneTuteur" id="TelephoneTuteur" aria-describedby="helpId"
+            placeholder="Téléphone tuteur" (keydown.enter)="GetData()">
+        </div>
+
+
+        <div class="form-group col-11 col-lg-2 mb-2 ms-lg-0">
+          <button type="button" id="getDataBtn1" class="btn btn-info text-center me-1" data-bs-toggle="tooltip" data-placement="bottom" [title]=" 'Rechercher' "
+            (click)="GetData()">
+            Rechercher
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+<div class="row" [style.height]="dockManagerConfig.height">
+  <div class="card student-list-card m-2">
+    <div class="card-header p-2">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 class="fs-4">{{ gridConfig.title }} {{ gridConfig.data != null && gridConfig.data.length > 0 ? '(' + gridConfig.data.length + ')' : '' }}</h4>
+     
+        <input type="text" class="form-control filter-input" (change)="OnFiltreChange($event,'null')" (keyup)="OnFiltreChange($event,'null')" [(ngModel)]="filterParams.global"
+          placeholder="Filtre" style="width: 25%; margin-right: 10px;" />
+
+        <div class="d-flex gap-2">
+          <button type="button" class="igx-button igx-button--outlined ng-star-inserted" (click)="MarkAsCasSocial()" title="Marquer comme cas social">
+             Marquer comme cas social
+          </button>
+          <button type="button" class="igx-button igx-button--outlined ng-star-inserted" (click)="Exporter()" title="Exporter">
+             Exporter
+          </button>
+          <div ngbDropdown class="d-inline-block" placement="bottom">
+            <button class="btn btn-outline-primary" id="gridEtudiantColumns" ngbDropdownToggle>Columns</button>
+            <div ngbDropdownMenu aria-labelledby="gridEtudiantColumns" style="overflow-y: scroll; max-height: 400px; width: 200px;">
+              <div *ngFor="let column of gridConfig.GetEnabledColumns(); let index=index;">
+                <div class="checkbox pt-1 pb-1 p-2 pr-2" style="color: black;">
+                  <input [id]="'checkbox_0_'+index" type="checkbox" [(ngModel)]="column.visible" />
+                  <label [for]="'checkbox_0_'+index">{{ column.header }}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
+        </div>
+      </div>
+    </div>
+    <div class="card-body p-2">
+      <div class="table-responsive" [style.maxHeight]="gridConfig.height" style="overflow-y: auto;">
+        <table class="table table-hover fixed_header">
+          <thead>
+            <tr class="table-header">
+              <th></th>
+              <th *ngFor="let column of gridConfig.GetVisibleColumns()" style="color: white; text-align: left;">{{ column.header }}</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="gridConfig.data == null">
+            <tr align="center">
+              <th><i>Chargement ...</i></th>
+            </tr>
+          </tbody>
+
+          <tbody *ngIf="gridConfig.data?.length == 0">
+            <tr align="center">
+              <th [attr.colspan]="gridConfig.GetVisibleColumns().length"><i>{{ gridConfig.emptyTemplateText }}</i></th>
+            </tr>
+          </tbody>
+
+          <tbody *ngIf="gridConfig.data != null && gridConfig.data.length > 0">
+            <tr *ngFor="let item of gridConfig.filtredData" (click)="selectEtudiant(item.Etd_Id)" [class.selected-row]="currentSelection.includes(item.Etd_Id)">
+              <td><img src="../../../../assets/images/user/user.png" alt="Photo" class="img" width="50" /></td>
+              <td *ngFor="let column of gridConfig.GetVisibleColumns()"
+                [style.textAlign]="column.dataType == 'string' ? 'left' : column.dataType == 'number' ? 'right' : column.dataType == 'date' ? 'center' : 'center'">
+
+                <span [ngSwitch]="column.dataType">
+                  <span *ngSwitchCase="'string'">{{ item[column.field] }}</span>
+                  <span *ngSwitchCase="'number'">
+                    <span *ngIf="column.isMontant">{{ item[column.field] | number:'1.2-2'}}</span>
+                    <span *ngIf="!column.isMontant">{{ item[column.field] }}</span>
+                  </span>
+                  <span *ngSwitchCase="'date'">{{ item[column.field] | date : "dd/MM/yyyy" }}</span>
+                  <span *ngSwitchCase="'boolean'"><span *ngIf="item[column.field] == true"><i class="fa fa-check"></i></span></span>
+                  <span *ngSwitchDefault>{{ item[column.field] }}</span>
+                </span>
+              </td>
+
+              <td style="width: 200px;">
+                <a class="text-warning fs-5 mx-2 point-cursor" title="Modifier élève" (click)="openEditModalEtudiant(editModalContentGet, item.Etd_Id)">
+                  <i class="fa fa-edit"></i>
+                </a>
+                <a class="text-danger fs-5 mx-2 point-cursor" title="Supprimer élève" (click)="deleteEtudiant(item.Etd_Id)">
+                  <i class="fa fa-trash"></i>
+                </a>
+                <a class="text-primary fs-5 mx-2 point-cursor" title="Details inscription" (click)="openinscriptionEtudiantModal(inscriptionEtudiantModal, item.Etd_Id)">
+                  <i class="fa fa-graduation-cap"></i> </a>
+                <a class="text-secondary fs-5 mx-2 point-cursor" title="Details élève" (click)="opendetailEtudiantModal(detailEtudiantModal, item.Etd_Id)">
+                  <i class="fa fa-folder-open"></i> </a>
+              </td>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #editModalContentGet let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title fs-4" id="dialogueetudiantget">Modification de l'élève {{selectedEtudiant.Etd_Nom}} {{selectedEtudiant.Etd_Prenom}}</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="addNom" class="form-label">Nom</label>
+          <input type="text" id="addNom" class="form-control" [(ngModel)]="selectedEtudiant.Etd_Nom" name="addNom" />
+        </div>
+        <div class="col">
+          <label for="addPrenom" class="form-label">Prénom</label>
+          <input type="text" id="addPrenom" class="form-control" [(ngModel)]="selectedEtudiant.Etd_Prenom" name="addPrenom" />
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="addMatricule" class="form-label">Matricule</label>
+          <input type="text" id="addMatricule" class="form-control" [(ngModel)]="selectedEtudiant.Etd_Matricule" name="addMatricule" disabled/>
+        </div>
+        <div class="col">
+          <label for="sexe">Sexe :</label>
+          <select class="form-control" id="sexe" [(ngModel)]="selectedTypeSexe" name="typeSexe">
+            <option *ngFor="let typeSexe of TypeSexeList" [value]="typeSexe.key">{{ typeSexe.libelle }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="addDateNaissance" class="form-label">Date de naissance</label>
+          <input type="date" id="addDateNaissance" class="form-control" [(ngModel)]="selectedEtudiant.Etd_DateNaissance" name="addDateNaissance" />
+        </div>
+        <div class="col">
+          <label for="addLieuNaissance" class="form-label">Lieu de naissance</label>
+          <input type="text" id="addLieuNaissance" class="form-control" [(ngModel)]="selectedEtudiant.Etd_LieuNaissance" name="addLieuNaissance" />
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="addEmail" class="form-label">Email</label>
+          <input type="text" id="addEmail" class="form-control" [(ngModel)]="selectedEtudiant.Etd_Mail" name="addEmail" />
+        </div>
+        <div class="col">
+          <label for="addAdresse" class="form-label">Adresse</label>
+          <input type="text" id="addAdresse" class="form-control" [(ngModel)]="selectedEtudiant.Etd_Adresse" name="addAdresse" />
+        </div>
+      </div>
+      <div class="row mb-3">
+
+        <div class="col">
+          <label for="addTel" class="form-label">Téléphone</label>
+          <input type="text" id="addTel" class="form-control" [(ngModel)]="selectedEtudiant.Etd_Tel" name="addTel" />
+        </div>
+        <div class="col">
+          <input id="addCasSocial" class="form-check-input" type="checkbox" [(ngModel)]="selectedEtudiant.Etd_EstCasSocial" name="addCasSocial"/>
+          <label for="addCasSocial" class="form-check-label ms-2">Cas Social</label>
+        </div>
+      </div>
+      <div class="row mb-3">
+
+        <div class="col">
+          <label for="addRemarque" class="form-label">Remarque</label>
+          <textarea type="text" id="addRemarque" class="form-control" [(ngModel)]="selectedEtudiant.Etd_Remarque" name="addRemarque"></textarea>
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annuler</button>
+    <button type="button" class="btn btn-primary" (click)="editEtudiant()">Enregistrer</button>
+  </div>
+</ng-template>
+
+
+
+<ng-template #inscriptionEtudiantModal let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title" id="dialogueInscriptionEtudiant">Inscrire l'élève</h2>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex flex-column">
+      <div>
+        <button class="btn btn-success mb-2" style="float: right;" (click)="openinscriptionEtudiantChoseClasseModal(inscriptionEtudiantChoseClasseModal, 'inscrire')"><i
+            class="fa fa-plus"></i> Nouvelle inscription</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Année</th>
+              <th>Niveau</th>
+              <th>Classe</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let parcours of selectedEtudiant.EtudiantClasseAnnees; let i = index">
+              <td>{{ parcours.Ann_Nom }}</td>
+              <td>{{ parcours.Niv_Nom }}</td>
+              <td>{{ parcours.Cls_Nom }}</td>
+              <td>
+                <a class="text-warning fs-5 mx-2 point-cursor" title="Modifier élève"
+                  (click)="openinscriptionEtudiantChoseClasseModal(inscriptionEtudiantChoseClasseModal, 'editerInsc', parcours)">
+                  <i class="fa fa-edit"></i>
+                </a>
+                <a class="text-danger fs-5 mx-2 point-cursor" title="Supprimer élève" (click)="deleteEtudiantClasseAnnee(parcours)">
+                  <i class="fa fa-trash"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light text-danger" (click)="modal.dismiss()">Fermer</button>
+  </div>
+</ng-template>
+
+<ng-template #inscriptionEtudiantChoseClasseModal let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title">Inscrire {{selectedEtudiant.Etd_Nom + ' ' + selectedEtudiant.Etd_Prenom}}</h2>
+  </div>
+  <div class="modal-body">
+    <div>
+      <label for="classe">Année</label>
+      <select id="classe" class="form-control" [(ngModel)]="selectedAnnId" (ngModelChange)="onYearChange($event)">
+        <option *ngFor="let annee of Annee" [value]="annee.Ann_Id">{{ annee.Ann_Nom }}</option>
+      </select>
+    </div>
+    <div class="mt-3">
+      <label for="classe">Classe</label>
+      <select id="classe" class="form-control" [(ngModel)]="this.newEtdClasseAnnee.ClasseAnn_Id">
+        <option *ngFor="let classe of filteredClasseAnnee" [value]="classe.ClasseAnn_Id">{{ classe.Cls_Nom }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="CloseDialoginscriptionEtudiantChoseClasseModal(modal)">Annuler</button>
+    <button type="button" class="btn btn-primary" (click)="IncrireEtudiant(modal)">Enregistrer</button>
+  </div>
+</ng-template>
+
+<ng-template #detailEtudiantModal let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title" id="dialogueInscriptionEtudiant">Dossier de l'élève : {{selectedEtudiant.Etd_Nom}} {{selectedEtudiant.Etd_Prenom}}</h2>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex flex-row gap-3">
+      <div class="profile-container flex-shrink-0" style="width: 40%;">
+        <div class="profile-card">
+          <div class="profile-left">
+            <img src="../../../../assets/images/user/user.png" alt="Photo" class="img" width="100" />
+            <h2 class="profile-name text-light">{{selectedEtudiant.Etd_Nom}} {{selectedEtudiant.Etd_Prenom}}</h2>
+            <p class="profile-title text-light">{{selectedEtudiant.Etd_Matricule}}</p>
+          </div>
+
+          <div class="profile-right">
+            <h3 class="details-title">Information personnelle</h3>
+            <ul class="details-list">
+              <li><strong>Nom :</strong> {{selectedEtudiant.Etd_Nom}} {{selectedEtudiant.Etd_Prenom}}</li>
+              <li><strong>Age :</strong> {{selectedEtudiant.Etd_Age}}</li>
+              <li><strong>Sexe :</strong> {{selectedEtudiant.Sex_Nom}}</li>
+              <li><strong>Date de naissance :</strong> {{selectedEtudiant.Etd_DateNaissance | date : "dd/MM/yyyy"}} </li>
+              <li><strong>Lieu de naissance :</strong> {{selectedEtudiant.Etd_LieuNaissance}}</li>
+              <li><strong>Adresse :</strong> {{selectedEtudiant.Etd_Adresse}}</li>
+              <li><strong>Remarque :</strong> {{selectedEtudiant.Etd_Remarque}}</li>
+
+            </ul>
+          
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-grow-1">
+        <br />
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <h3 class="details-title m-0">Information tuteur</h3>
+          <button class="btn btn-primary" (click)="openEtudiantTuteurModal(AddEtudiantTuteurModal, 'ajouter', selectedEtudiant)">
+            <i class="fa fa-plus"></i> Ajouter tuteur
+          </button>
+        </div>
+
+
+
+        <!-- Tableau -->
+        <div class="table-responsive mt-3">
+          <table class="table align-middle">
+            <thead class="table text-center">
+              <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Sexe</th>
+                <th>CIN</th>
+                <th>Téléphone</th>
+                <!-- <th>Numéro whatsapp</th> -->
+                <th>Mail</th>
+                <th>Profession</th>
+                <th>Lien de parenté</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="EtudiantTuteur == null || EtudiantTuteur.length == 0">
+                <td colspan="9" class="text-center fst-italic">
+                  Aucun tuteur affecté pour cet élève
+                </td>
+              </tr>
+              <tr [ngClass]="{'background-color text-white': EtdTut.EtdTuteur_ParDefault}" *ngFor="let EtdTut of EtudiantTuteur" class="text-center">
+                <td>{{ EtdTut.Tut_Nom }}</td>
+                <td>{{ EtdTut.Tut_Prenom }}</td>
+                <td>{{ EtdTut.Tut_Sex_Nom }}</td>
+                <td>{{ EtdTut.Tut_CIN }}</td>
+                <td>{{ EtdTut.Tut_Tel }}</td>
+                <!-- <td>{{ EtdTut.Tut_Tel2 }}</td> -->
+                <td>{{ EtdTut.Tut_Mail }}</td>
+                <td>{{ EtdTut.Tut_Profession }}</td>
+                <td>{{ EtdTut.LienParente }}</td>
+                <td>
+                  <a class="text-warning fs-5 mx-2" style="cursor: pointer;" title="Modifier tuteur" (click)="openEtudiantTuteurModal(EditEtudiantTuteurModal, 'modifier', EtdTut)">
+                    <i class="fa fa-edit"></i>
+                  </a>
+                  <a class="text-danger fs-5 mx-2" style="cursor: pointer;" title="Supprimer tuteur" (click)="deleteEtudiantTuteur(EtdTut.EtdTuteur_Id)">
+                    <i class="fa fa-trash"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</ng-template>
+
+<ng-template #AddEtudiantTuteurModal let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title">Ajouter Tuteur</h2>
+  </div>
+
+  <div class="modal-body">
+    <div class="stepper">
+      <div *ngIf="currentStep === 1">
+        <div class="mb-3">
+          <label class="form-label">Est-ce que le tuteur existe déja ?</label>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" id="oui" [(ngModel)]="hasTuteur" [value]="true" name="tuteurOption">
+            <label class="form-check-label" for="oui">Oui</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" id="non" [(ngModel)]="hasTuteur" [value]="false" name="tuteurOption">
+            <label class="form-check-label" for="non">Non</label>
+          </div>
+        </div>
+
+        <!-- Input visible si tuteur existe -->
+        <div *ngIf="hasTuteur">
+          <div class="row mb-3">
+            <div class="col">
+              <label class="form-label">Tuteur</label>
+              <select id="classe" class="form-control" [(ngModel)]="this.newEtdTut.Tut_Id">
+                <option *ngFor="let tut of Enums.Tuteurs" [value]="tut.Tut_Id">{{ tut.Tut_Nom }} {{ tut.Tut_Prenom }}</option>
+              </select>
+            </div>
+            <div class="col">
+              <label for="LienParente" class="form-label">Lien de parenté</label>
+              <input type="text" id="LienParente" class="form-control" [(ngModel)]="newEtdTut.LienParente" name="LienParente" />
+            </div>
+            <div class="col">
+              <input type="checkbox" class="form-check-input" id="isDefaultCheckbox" [(ngModel)]="newEtdTut.EtdTuteur_ParDefault" name="isDefaultCheckbox" />
+              <label class="form-check-label" for="isDefaultCheckbox">
+                Tuteur principale
+              </label>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary mt-3" *ngIf="!hasTuteur" (click)="nextStep()">Suivant</button>
+
+          <button class="btn btn-primary mt-3" *ngIf="hasTuteur" (click)="AddEtudiantTuteur(modal)">Enregistrer</button>
+
+          <button type="button" class="btn btn-danger mt-3" (click)="closeModal(modal)">Fermer</button>
+        </div>
+      </div>
+
+      <!-- Deuxième Step -->
+      <div *ngIf="currentStep === 2">
+        <form>
+          <div class="row mb-3">
+            <div class="col">
+              <label for="nom" class="form-label">Nom</label>
+              <input type="text" id="nom" class="form-control" [(ngModel)]="newEtdTut.Tut_Nom" name="nom" />
+            </div>
+            <div class="col">
+              <label for="prenom" class="form-label">Prénom</label>
+              <input type="text" id="prenom" class="form-control" [(ngModel)]="newEtdTut.Tut_Prenom" name="prenom" />
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col">
+              <label for="sexe" class="form-label">Sexe</label>
+              <select class="form-control" id="sexe" [(ngModel)]="newEtdTut.Tut_Sex_Id" name="typeSexe">
+                <option *ngFor="let typeSexe of TypeSexeList" [value]="typeSexe.key">{{ typeSexe.libelle }}</option>
+              </select>
+            </div>
+            <div class="col">
+              <label for="CIN" class="form-label">CIN</label>
+              <input type="text" id="CIN" class="form-control" [(ngModel)]="newEtdTut.Tut_CIN" name="CIN" />
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col">
+              <label for="adresse" class="form-label">Adresse</label>
+              <input type="text" id="adresse" class="form-control" [(ngModel)]="newEtdTut.Tut_Adresse" name="adresse" />
+            </div>
+            <div class="col">
+              <label for="tel" class="form-label">Téléphone</label>
+              <input type="text" id="tel" class="form-control" [(ngModel)]="newEtdTut.Tut_Tel" name="tel" />
+            </div>
+          </div>
+
+          <!-- <div class="row mb-3">
+            <div class="col">
+              <label for="tel2" class="form-label">Numéro whatsapp</label>
+              <input type="text" id="tel2" class="form-control" [(ngModel)]="newEtdTut.Tut_Tel2" name="tel2" />
+            </div>
+          </div> -->
+
+          <div class="row mb-3">
+
+            <div class="col">
+              <label for="photo" class="form-label">Mail</label>
+              <input type="text" id="photo" class="form-control" [(ngModel)]="newEtdTut.Tut_Mail" name="photo" />
+            </div>
+            <div class="col">
+              <label for="niveau" class="form-label">Profession</label>
+              <input type="text" id="niveau" class="form-control" [(ngModel)]="newEtdTut.Tut_Profession" name="niveau" />
+            </div>
+          </div>
+          <div class="row mb-3">
+
+            <div class="col">
+              <label for="LienParent" class="form-label">Lien de parenté</label>
+              <input type="text" id="LienParent" class="form-control" [(ngModel)]="newEtdTut.LienParente" name="LienParent" />
+            </div>
+            <div class="col">
+              <input type="checkbox" class="form-check-input" id="isDefaultCheckbox" [(ngModel)]="newEtdTut.EtdTuteur_ParDefault" name="isDefaultCheckbox" />
+              <label class="form-check-label" for="isDefaultCheckbox">
+                Tuteur principale
+              </label>
+            </div>
+          </div>
+        </form>
+
+        <div class="modal-footer">
+
+          <button class="btn btn-primary mt-3" (click)="AddEtudiantTuteur(modal)">Enregistrer</button>
+
+          <button type="button" class="btn btn-danger mt-3" (click)="closeModal(modal)">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+
+<ng-template #EditEtudiantTuteurModal let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title">Modifier Tuteur</h2>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="nom" class="form-label">Nom</label>
+          <input type="text" id="nom" class="form-control" [(ngModel)]="newEtdTut.Tut_Nom" name="nom" />
+        </div>
+        <div class="col">
+          <label for="prenom" class="form-label">Prénom</label>
+          <input type="text" id="prenom" class="form-control" [(ngModel)]="newEtdTut.Tut_Prenom" name="prenom" />
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col">
+          <label for="sexe" class="form-label">Sexe</label>
+          <select class="form-control" id="sexe" [(ngModel)]="selectedTypeSexe" (ngModelChange)="onSexeChange($event)" name="typeSexe">
+            <option *ngFor="let typeSexe of TypeSexeList" [value]="typeSexe.key">
+              {{ typeSexe.libelle }}
+            </option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="CIN" class="form-label">CIN</label>
+          <input type="text" id="CIN" class="form-control" [(ngModel)]="newEtdTut.Tut_CIN" name="CIN" />
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col">
+          <label for="adresse" class="form-label">Adresse</label>
+          <input type="text" id="adresse" class="form-control" [(ngModel)]="newEtdTut.Tut_Adresse" name="adresse" />
+        </div>
+        <div class="col">
+          <label for="tel" class="form-label">Téléphone</label>
+          <input type="text" id="tel" class="form-control" [(ngModel)]="newEtdTut.Tut_Tel" name="tel" />
+        </div>
+      </div>
+      <!-- <div class="row mb-3">
+            <div class="col">
+              <label for="tel2" class="form-label">Numéro whatsapp</label>
+              <input type="text" id="tel2" class="form-control" [(ngModel)]="newEtdTut.Tut_Tel2" name="tel2" />
+            </div>
+          </div> -->
+
+      <div class="row mb-3">
+
+        <div class="col">
+          <label for="photo" class="form-label">Mail</label>
+          <input type="text" id="photo" class="form-control" [(ngModel)]="newEtdTut.Tut_Mail" name="photo" />
+        </div>
+        <div class="col">
+          <label for="niveau" class="form-label">Profession</label>
+          <input type="text" id="niveau" class="form-control" [(ngModel)]="newEtdTut.Tut_Profession" name="niveau" />
+        </div>
+      </div>
+      <div class="row mb-3">
+
+        <!-- <div class="col">
+          <label for="photo" class="form-label">Mail</label>
+          <input type="text" id="photo" class="form-control" [(ngModel)]="newEtdTut.Tut_Mail" name="photo" />
+        </div> -->
+        <div class="col">
+          <label for="LienParent" class="form-label">Lien de parenté</label>
+          <input type="text" id="LienParent" class="form-control" [(ngModel)]="newEtdTut.LienParente" name="LienParent" />
+        </div>
+        <div class="col">
+          <!-- <label for="ParDefault" class="form-label">Par Défaut</label> -->
+          <!-- <input type="checkbox" id="ParDefault" class="form-control" [(ngModel)]="newEtdTut.EtdTuteur_ParDefault" name="ParDefault" /> -->
+          <input type="checkbox" class="form-check-input" id="isDefaultCheckbox" [(ngModel)]="newEtdTut.EtdTuteur_ParDefault" name="isDefaultCheckbox" />
+          <label class="form-check-label" for="isDefaultCheckbox">
+            Tuteur principale
+          </label>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="EditEtudiantTuteur(modal)">Enregistrer</button>
+
+    <button type="button" class="btn btn-danger" (click)="modal.dismiss()">Fermer</button>
+  </div>
+</ng-template>

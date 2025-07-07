@@ -1,0 +1,135 @@
+<app-breadcrumb [title]="'Domaines'"></app-breadcrumb>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+          <h3></h3>
+          <!-- <button class="btn btn-success" (click)="openTeacherModal(teacherModal)">+</button> -->
+          <button class="btn btn-primary" type="button" (click)="openAddModal(addModalContent)" title="Ajouter Domaine"><i class="fa fa-plus"></i></button>
+        </div>
+      </div>
+
+      <!-- Tableau des candidats -->
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Description</th>
+              <th>Parent</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="Domaines == null || Domaines?.length == 0">
+              <th style="text-align: center;" colspan="4" align="center"><i>Aucun domaine</i></th>
+            </tr>
+            <tr *ngFor="let domaine of Domaines; let i = index">
+              <td>{{ domaine.Dom_Nom }}</td>
+              <td>{{ domaine.Dom_Description }}</td>
+              <td>{{ domaine.DomParent_Nom }}</td>
+
+              <td>
+                <a class="text-warning fs-5 mx-2 point-cursor" title="Modifier Domaine" (click)="openEditModalDomaine(editModalContentGet, domaine)">
+                  <i class="fa fa-edit"></i>
+                </a>
+                <a class="text-danger fs-5 mx-2 point-cursor" title="Supprimer Domaine" (click)="deleteDomaine(i)">
+                  <i class="fa fa-trash"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer text-end">
+        <div class="col-sm-9 offset-sm-3">
+          <button class="btn btn-success" type="submit" (click)="goToNiveau()">Continuer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal pour Modifier DomaineGet -->
+<ng-template #editModalContentGet let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title fs-4" id="dialoguedomianeget">Modification du domaine</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="Dom_Nom" class="form-label">Domaine</label>
+          <input type="text" id="Dom_Nom" class="form-control" [(ngModel)]="selectedDomaine.Dom_Nom" name="Dom_Nom" />
+        </div>
+        <div class="col">
+          <label for="Dom_Description" class="form-label">Description</label>
+          <input type="text" id="Dom_Description" class="form-control" [(ngModel)]="selectedDomaine.Dom_Description" name="Dom_Description" />
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="selectParentEdit" class="form-label">Domaine Parent</label>
+          <select id="selectParentEdit" class="form-control" [(ngModel)]="selectedDomaine.DomParent_Id" name="selectParentEdit">
+            <option [value]="''">Aucun</option>
+            <option *ngFor="let domaine of Domaines" [value]="domaine.Dom_Id">{{ domaine.Dom_Nom }}</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annuler</button>
+    <button type="button" class="btn btn-primary" (click)="editDomaine()">Enregistrer</button>
+  </div>
+</ng-template>
+<!-- Modal pour Ajouter un domaine -->
+
+<ng-template #addModalContent let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title fs-4" id="dialogueAddDomaine">Ajouter Domaine</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="addNom" class="form-label">Nom</label>
+          <input type="text" id="addNom" class="form-control" [(ngModel)]="newDomaine.Dom_Nom" name="addNom" />
+        </div>
+        <div class="col">
+          <label for="addPrenom" class="form-label">Description</label>
+          <input type="text" id="addPrenom" class="form-control" [(ngModel)]="newDomaine.Dom_Description" name="addPrenom" />
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <form>
+          <div class="form-group">
+            <label for="selectDomaine">Sélectionnez le domaine parent</label>
+            <select id="selectDomaine" class="form-control" [(ngModel)]="selectedDomaineId" name="domaineSelect">
+              <option [value]="''">Aucun</option>
+              <option *ngFor="let domaine of Domaines" [value]="domaine.Dom_Id">{{ domaine.Dom_Nom }}</option>
+            </select>
+          </div>
+        </form>
+        <!-- <div class="col">
+          <label for="addRecrute" class="form-label">Date de recrutement</label>
+          <input type="date" id="addRecrute" class="form-control" [(ngModel)]="newEnseignant.Ens_DateRecrutement" name="addRecrute" />
+        </div> -->
+        <!-- <div class="col">
+          <label for="sexe">Sexe :</label>
+          <select class="form-control" id="sexe" [(ngModel)]="selectedDomaineId" name="typeSexe">
+            <option *ngFor="let domaine of DomainesWithParent" [value]="domaine.Dom_Id">{{ domaine.Dom_Nom }}</option>
+          </select>
+        </div> -->
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annuler</button>
+    <button type="button" class="btn btn-primary" (click)="addNewDomaine()">Ajouter</button>
+  </div>
+</ng-template>

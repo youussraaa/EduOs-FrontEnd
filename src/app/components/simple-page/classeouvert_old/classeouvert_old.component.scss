@@ -1,0 +1,10 @@
+.table-container {
+    max-height: 50vh; /* Hauteur maximale en fonction de la taille de l'écran */
+    overflow-y: auto; /* Active le défilement vertical */
+  }
+  .table thead th {
+    position: sticky;
+    top: 0;
+    background-color: white; /* Garde le fond visible lors du défilement */
+    z-index: 1;
+  }

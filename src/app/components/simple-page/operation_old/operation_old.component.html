@@ -1,0 +1,153 @@
+<app-breadcrumb [title]="'Encaissement'" active_item="operation"></app-breadcrumb>
+
+<div class="card card-body border-0 px-0 px-lg-2 py-2" style="background-color: transparent;">
+  <div class="col-12 pt-2 pb-0">
+    <form class="d-block  d-lg-flex flex-lg-column justify-content-center col-12 px-xl-2 px-2 px-lg-0 px-xl-2">
+      <div class="row col-12 px-0 mx-0">
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-0 px-1">
+          <input type="date" [(ngModel)]="searchParams.Ope_Date" class="form-control" name="SrchDate" id="SrchDate" aria-describedby="helpId" placeholder="Date">
+        </div>
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-0 px-1">
+          <select [(ngModel)]="searchParams.Ann_Id" class="form-select" name="SrchAnnee" id="SrchAnnee">
+            <option value="00000000-0000-0000-0000-000000000000" selected>Toutes les années</option> <!-- Option par défaut -->
+            <option *ngFor="let item of Annees" [value]="item.Ann_Id">{{ item.Ann_Nom }}</option>
+          </select>
+        </div>
+        
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-0 px-1">
+          <input type="search" [(ngModel)]="searchParams.Etd_Nom" class="form-control" name="SrchNom" id="SrchNom" aria-describedby="helpId" placeholder="Nom">
+        </div>
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-0 px-1">
+          <input type="search" [(ngModel)]="searchParams.Etd_Prenom" class="form-control" name="SrchPrenom" id="SrchPrenom" aria-describedby="helpId" placeholder="Prenom">
+        </div>
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-0 px-1">
+          <input type="search" [(ngModel)]="searchParams.Etd_Matricule" class="form-control" name="SrchMatricule" id="SrchMatricule" aria-describedby="helpId" placeholder="Matricule">
+        </div>
+        <div class="form-group col-11 col-lg-2 mb-2 ms-lg-0">
+          <button type="button" id="getDataBtn1" class="btn btn-info text-center me-1" data-bs-toggle="tooltip" data-placement="bottom"
+            [title]=" 'DOSSIERETUDIANT.GRIDOTHER.STARTSRCH' | translate " (click)="charger()">
+            Rechercher
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div *ngIf="this.Operations.length>0" class="row">
+  <div class="col-sm-2" *ngFor="let mode of totalParModePaiement | keyvalue">
+    <div class="card shadow-lg border-0 widget-hover">
+      <div style="padding: 12px;" class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <i class="fa fa-money fs-5 text-warning"></i>
+          <h3 class="card-title fs-6 ms-3 mb-0"><strong>{{mode.key}}</strong></h3>
+        </div>
+        <p class="card-text fs-6 text-center fw-bold">{{mode.value | number:'1.2-2'}} FCFA</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="container-fluid basic_table">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="fs-4">
+              Les opérations {{ this.Operations != null ? '(' + this.Operations.length + ')' : '' }}
+            </h5>
+            <button *ngIf="this.Operations.length>0" class="btn btn-primary" type="button" title="Exporter" (click)="exportExcel()">
+              exporter
+            </button>
+          </div>
+        </div>
+
+        <!-- Tableau des candidats -->
+        <div class="table-responsive">
+          <table class="table fixed_header" id="table-data">
+            <thead>
+              <tr>
+                <!-- <th>Photo</th> -->
+                <th>Matricule</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Sexe</th>
+
+                <th>Date de naissance</th>
+                <th>Numéro de recu</th>
+                <th>Montant</th>
+                <th>Mode de paiement</th>
+                <th>Date d'opération</th>
+                <th>Année</th>
+                <th>Classe</th>
+                <th>Description</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let operation of Operations; let i = index">
+                <!-- <td><img src="../../../../assets/images/user/user.png" alt="Photo" class="img" width="50" /></td> -->
+                <td>{{ operation.Etd_Matricule }}</td>
+
+                <td>{{ operation.Etd_Nom }}</td>
+                <td>{{ operation.Etd_Prenom }}</td>
+                <td>{{ operation.Sex_Nom }}</td>
+                <td>{{ operation.Etd_DateNaissance | date : "dd/MM/yyyy" }}</td>
+                <td>{{ operation.Ope_NumRecu }}</td>
+                <td>{{ operation.Ope_Montant | number:'1.2-2'}} FCFA</td>
+                <td>{{ operation.ModPai_Nom }}</td>
+                <td>{{ operation.Ope_Date | date : "dd/MM/yyyy"}}</td>
+                <td>{{ operation.Ann_Nom }}</td>
+                <td>{{ operation.Cls_Nom }}</td>
+                <td>{{ operation.Ope_Description }}</td>
+
+
+                <td>
+                  <a class="text-primary fs-5 mx-2 point-cursor" title="Details Opération" (click)="openReglementModal(ReglementModal, operation)">
+                    <i class="fa fa-bars"></i> </a>
+                  <a class="text-info mx-2 point-cursor" title="Générer le reçu" (click)="genereRecu(operation.Ope_Id)" style="font-size: 20px;">
+                    <i class="fa fa-file"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<ng-template #ReglementModal let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title" id="dialogueReglement">Détails des réglements</h2>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex flex-column">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Versement</th>
+              <th>Montant reglement</th>
+              <th>Remarque</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let reglement of selectedOperation.Reglements">
+              <td>{{ reglement.Vers_Nom }}</td>
+              <td>{{ reglement.Regl_Montant | number:'1.2-2'}} FCFA</td>
+              <td>{{ reglement.Regl_Remarque }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger " (click)="modal.dismiss()">Fermer</button>
+    <!-- <button type="button" class="btn btn-primary" (click)="onSubmit(modal)">Enregistrer</button> -->
+  </div>
+</ng-template>

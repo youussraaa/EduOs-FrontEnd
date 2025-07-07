@@ -1,0 +1,52 @@
+<div class="container">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="card">
+          <div class="card-header text-center">
+            <h2>Profil de l'Élève</h2>
+          </div>
+  
+          <!-- Informations de l'étudiant -->
+          <div class="card-body">
+            <div class="text-center mb-4">
+              <!-- Afficher la photo de l'étudiant -->
+              <img [src]="student.photo" alt="Photo de l'élève" class="img-thumbnail" width="150">
+            </div>
+  
+            <!-- Détails de l'étudiant -->
+            <div class="mb-3">
+              <strong>Nom:</strong> {{ student.nom }}
+            </div>
+            <div class="mb-3">
+              <strong>Prénom:</strong> {{ student.prenom }}
+            </div>
+            <div class="mb-3">
+              <strong>Date de naissance:</strong> {{ student.dateNaissance }}
+            </div>
+            <div class="mb-3">
+              <strong>Lieu de naissance:</strong> {{ student.lieuNaissance }}
+            </div>
+            <div class="mb-3">
+              <strong>Niveau:</strong> {{ student.niveau }}
+            </div>
+            <div class="mb-3">
+              <strong>Classe:</strong> {{ student.classe }}
+            </div>
+            <div class="mb-3">
+              <strong>Adresse:</strong> {{ student.adresse }}
+            </div>
+            <div class="mb-3">
+              <strong>Téléphone:</strong> {{ student.tel }}
+            </div>
+  
+            <!-- Boutons d'actions -->
+            <div class="d-flex justify-content-between">
+              <button class="btn btn-primary" (click)="editStudent()">Modifier</button>
+              <button class="btn btn-danger" (click)="deleteStudent()">Supprimer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

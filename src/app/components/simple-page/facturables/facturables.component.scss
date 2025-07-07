@@ -1,0 +1,30 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Évite le scroll inutile */
+  }
+  
+  .container-fluid.basic_table {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #infoCard {
+    flex-grow: 1; /* Permet à la carte d'occuper tout l'espace disponible */
+    min-height: 200px; /* Pour éviter qu'elle disparaisse si la fenêtre est trop petite */
+    overflow-y: auto; /* Ajoute un scroll si nécessaire */
+  }
+  .card{
+    margin-top: 30px;
+  }
+  
+ 
+  
+  thead {
+    position: sticky;
+    top: -30px;
+    background-color: white;
+    z-index: 100;
+  }

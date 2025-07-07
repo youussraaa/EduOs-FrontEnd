@@ -1,0 +1,7 @@
+.header-wrapper{
+    background: linear-gradient(to right, #33B1EE, #7366ff);
+}
+.header-search, .mode, .media{
+    filter: brightness(100) saturate(100%) invert(0%) sepia(90%) saturate(600%) hue-rotate(180deg);
+}
+

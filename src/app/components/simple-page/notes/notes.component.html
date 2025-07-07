@@ -1,0 +1,89 @@
+<app-breadcrumb [title]="'Notes'"></app-breadcrumb>
+
+<div class="row mt-4">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="fs-4">
+            Liste des notes 
+            <!-- <a title="Filtrer" (click)="showHistory()"><i class="fa fa-filter fs-3" style="cursor: pointer"></i> </a> -->
+          </h5>
+          <!-- <button class="btn btn-primary" type="button" (click)="openFormulaireModal(formulaireModal)"><i class="fa fa-plus"></i></button> -->
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Photo</th>
+                  <th>Nom</th>
+                  <th>Prénom</th>
+                  <th>Niveau</th>
+                  <th>Classe</th>
+                  <th *ngFor="let subject of subjects">{{ subject }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let note of filteredNotes">
+                  <td><img [src]="note.photo" alt="Photo" class="img-thumbnail" width="50" /></td>
+                  <td>{{ note.nom }}</td>
+                  <td>{{ note.prenom }}</td>
+                  <td>{{ note.niveau }}</td>
+                  <td>{{ note.classe }}</td>
+                  <td *ngFor="let subject of subjects">{{ note.matieres[subject] || "-" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="right-history" [class.show]="history">
+  <div class="modal-header p-20" (click)="showHistory()">
+    <h3 class="modal-title w-100">
+      Filtrage<span class="pull-right"
+        ><a class="closehistory" href="javascript:void(0)"><i class="icofont icofont-close fs-5"></i></a
+      ></span>
+    </h3>
+  </div>
+  <div class="history-details">
+    <!-- <div class="text-center">
+      <i class="icofont icofont-ui-edit"></i>
+      <p>Contact has not been modified yet.</p>
+    </div> -->
+    <div class="media">
+      <i class="icofont icofont-star me-3"></i>
+      <div class="media-body mt-0">
+        <h3 class="mt-0">Filtrage par niveau</h3>
+        <select id="niveau" class="form-control" [(ngModel)]="niveauFilter" (change)="applyFilters()">
+          <option value="">Tous</option>
+          <option *ngFor="let niveau of niveaux" [value]="niveau">{{ niveau }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="media">
+      <i class="icofont icofont-star me-3"></i>
+      <div class="media-body mt-0">
+        <h3 class="mt-0">Filtrage par classe</h3>
+
+        <select id="classe" class="form-control" [(ngModel)]="classeFilter" (change)="applyFilters()">
+          <option value="">Tous</option>
+          <option *ngFor="let classe of classes" [value]="classe">{{ classe }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="media">
+      <i class="icofont icofont-star me-3"></i>
+      <div class="media-body mt-0">
+        <h3 class="mt-0">Rechercher</h3>
+
+        <input id="search" type="text" class="form-control" [(ngModel)]="searchFilter" (input)="applyFilters()" placeholder="Nom, Prénom" />
+      </div>
+    </div>
+  </div>
+</div>

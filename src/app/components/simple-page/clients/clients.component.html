@@ -1,0 +1,499 @@
+<!-- <app-breadcrumb [title]="'Etudiant'" [active_item]="'Clients'"></app-breadcrumb> -->
+<!-- Container-fluid starts-->
+<div class="container-fluid">
+  <div class="email-wrap bookmark-wrap">
+    <div class="row">
+      <div class="col-xl-3 box-col-3">
+        <div class="email-left-aside">
+          <div class="card">
+            <div class="card-body">
+              <div class="email-app-sidebar left-bookmark">
+                <div class="media">
+                  <div class="media-size-email"><img class="me-3 rounded-circle" src="assets/images/user/user.png" alt="" /></div>
+                  <div class="media-body">
+                    <h6 class="f-w-600">{{ User?.FullName }}</h6>
+                    <p>{{ User?.email }}</p>
+                    <!-- <p>cecile&#64;acm-maroc.com</p> -->
+                  </div>
+                </div>
+                <ul class="nav main-menu contact-options" role="tablist">
+                  <li class="nav-item mt-3">
+                    <!-- <button class="btn btn-primary w-100" type="button" (click)="AddClient.openModal()"><i class="me-2" data-feather="users"></i> Ajouter client</button> -->
+                  </li>
+                  <!-- <li class="nav-item mt-3"><span class="main-title">Prestation</span></li> -->
+                  <li>
+                    <!-- <a id="pills-personal-tab" data-bs-toggle="pill" href="#pills-personal" role="tab" aria-controls="pills-personal" aria-selected="true" (click)="LoadTous()">
+                      <span class="title">Tous</span>
+                    </a> -->
+                  </li>
+                  <!-- <li>
+                    <button class="btn btn-category" type="button" (click)="AddCategory.openModal()"><span class="title"> + Add Category</span></button>
+                  </li> -->
+                  <!-- <li>
+                    <a class="show" id="pills-maroc-tab" data-bs-toggle="pill" href="#pills-maroc" role="tab" aria-controls="pills-maroc" aria-selected="false"><span class="title"> Installation maroc</span></a>
+                  </li>
+                  <li>
+                    <a class="show" id="pills-france-tab" data-bs-toggle="pill" href="#pills-france" role="tab" aria-controls="pills-france" aria-selected="false"><span class="title">Retour en france</span></a>
+                  </li> -->
+                  <!-- <li><a href="javascript:void(0)"><span class="title">Favorites</span></a></li> -->
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-9 col-md-12 box-col-9">
+        <div class="email-right-aside bookmark-tabcontent contacts-tabs">
+          <div class="card email-body radius-left">
+            <div class="ps-0">
+              <div class="tab-content">
+                <div class="tab-pane fade active show" id="pills-personal" role="tabpanel" aria-labelledby="pills-personal-tab">
+                  <div class="card mb-0">
+                    <div class="card-header d-flex">
+                      <h5>Tous</h5>
+                      <span class="f-14 pull-right mt-0">{{ Etudiants.length }} Clients</span>
+                    </div>
+                    <div class="card-body p-0">
+                      <div class="row list-persons" id="addcon">
+                        <div [class]="CurrentEtudiant == null ? 'col-xl-12 col-md-12' : 'col-xl-4 xl-50 col-md-5'">
+                          <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <!-- href="#v-pills-user"  -->
+                            <a *ngFor="let etudiant of Etudiants" class="contact-tab-0 nav-link active" [id]="etudiant.Etd_Id" data-bs-toggle="pill" href="javascript:void(0)" role="tab" aria-controls="v-pills-user" aria-selected="false" [class.active]="etudiant.IsSelected != null && etudiant.IsSelected" (click)="OnEtdSelected(etudiant.Etd_Id)">
+                              <div class="media">
+                                <!-- Photo -->
+                                <img class="img-50 img-fluid m-r-20 rounded-circle update_img_0" [src]="etudiant.Etd_Photo" alt="" />
+                                <!-- <img *ngIf="client.ImgSrc == null" class="img-50 img-fluid m-r-20 rounded-circle update_img_0" src="assets/images/user/2.png" alt="" /> -->
+                                <div class="media-body">
+                                  <h6>
+                                    <span class="first_name_0">{{ etudiant.Etd_Nom }} </span><span class="last_name_0">{{ etudiant.Etd_Prenom }}</span>
+                                  </h6>
+                                  <p class="email_add_0">{{ etudiant.Etd_Mail }}</p>
+                                </div>
+                              </div>
+                            </a>
+                          </div>
+                        </div>
+
+                        <div class="col-xl-8 xl-50 col-md-7" *ngIf="CurrentEtudiant != null">
+                          <div class="tab-content" id="v-pills-tabContent" [ngStyle]="{ display: IsEditingEtd ? 'none' : '' }">
+                            <div class="tab-pane contact-tab-0 tab-content-child fade show active" id="v-pills-user" role="tabpanel" aria-labelledby="v-pills-user-tab">
+                              <div class="profile-mail">
+                                <div class="media">
+                                  <!-- <img class="img-100 img-fluid m-r-20 rounded-circle update_img_0" [src]="CurrentClient.ImgSrc" alt="" style="cursor: pointer;" />
+                                  <input class="updateimg" type="file" name="img" (change)="onProfileImageChange($event)" accept="image/*" /> -->
+                                  <div class="position-relative d-inline-block">
+                                    <img class="img-100 img-fluid m-r-20 rounded-circle update_img_0" [src]="CurrentEtudiant.Etd_Photo" alt="" />
+                                    <i class="fa fa-pencil position-absolute" style="top: 10px; right: 10px; font-size: 20px; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px; border-radius: 50%; cursor: pointer" (click)="triggerFileInput()"></i>
+                                    <input class="updateimg" type="file" name="img"  accept="image/*" style="display: none" #fileInput />
+                                  </div>
+
+                                  <div class="media-body mt-0">
+                                    <h5>
+                                      <span class="first_name_0">{{ CurrentEtudiant.Etd_Prenom }} </span><span class="last_name_0">{{ CurrentEtudiant.Etd_Nom }}</span>
+                                    </h5>
+                                    <p class="email_add_0">{{ CurrentEtudiant.Etd_Mail }}</p>
+                                    <ul>
+                                      <li><a href="javascript:void(0)" (click)="StartUpdateClient()">Modifier</a></li>
+                                      <li><a href="javascript:void(0)" (click)="sweetAlertDelete(CurrentEtudiant.Etd_Id)">Supprimer</a></li>
+                                      <!-- <li><a href="javascript:void(0)" (click)="showHistory()">Historique</a></li> -->
+                                      <!-- <li><a href="javascript:void(0)" (click)="Print.openModal()">Imprimer</a></li> -->
+                                      <li><a href="javascript:void(0)" (click)="navigateToDetails(CurrentEtudiant.Etd_Id)">Détails</a></li>
+                                    </ul>
+                                  </div>
+                                </div>
+                                <div class="email-general">
+                                  <h6 class="mb-3">Information Générale</h6>
+                                  <ul>
+                                    <li>
+                                      Nom <span class="font-primary first_name_0">{{ CurrentEtudiant.Etd_Nom }}</span>
+                                    </li>
+                                    <li>
+                                      Prénom <span class="font-primary last_name_0">{{ CurrentEtudiant.Etd_Prenom }}</span>
+                                    </li>
+                                    <!-- <li>Gender <span class="font-primary">Male</span></li> -->
+                                    <li>
+                                      Date De Naissance <span class="font-primary">{{ CurrentEtudiant.Etd_DateNaissance | date : "dd/MM/yyyy" }} </span>
+                                    </li>
+                                    <!-- <li>Personality<span class="font-primary personality_0">Cool</span></li> -->
+                                    <!-- <li>City<span class="font-primary city_0">moline acres</span></li> -->
+                                    <li>
+                                      Téléphone
+                                      <span class="font-primary mobile_num_0">
+                                        {{ CurrentEtudiant.Etd_Tel }}
+                                      </span>
+                                    </li>
+                                    <li>
+                                      Email <span class="font-primary email_add_0"> {{ CurrentEtudiant.Etd_Mail }}</span>
+                                    </li>
+                                    <!-- <li>Website<span class="font-primary url_add_0">www.test.com</span></li> -->
+                                    <!-- <li>Interest<span class="font-primary interest_0">photography</span></li> -->
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- #region EditClient -->
+                          <div class="contact-editform ps-0" [ngStyle]="{ display: !IsEditingEtd ? 'none' : '' }">
+                            <div *ngIf="EtudiantToUpdate != null">
+                              <div class="row g-2">
+                                <div class="mt-0 mb-3 col-md-12">
+                                  <div class="row">
+                                    <div class="col-sm-6">
+                                      <label>Nom</label>
+                                      <input class="form-control" id="Nom" type="text" required="" placeholder="Nom" [(ngModel)]="EtudiantToUpdate.Etd_Nom" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                      <label>Prénom</label>
+                                      <input class="form-control" id="Prenom" type="text" required="" placeholder="Prénom" [(ngModel)]="EtudiantToUpdate.Etd_Prenom" />
+                                    </div>
+                                  </div>
+                                </div>
+                                <!-- <div class="mt-0 mb-3 col-md-12">
+                                  <label>Date de naissance</label>
+                                  <input class="form-control" id="DateNaissance" type="date" required="" autocomplete="off" [(ngModel)]="EtudiantToUpdate.DateNaissance" />
+                                </div> -->
+                                <div class="mt-0 mb-3 col-md-12">
+                                  <label>Email </label>
+                                  <input class="form-control" id="Email1" type="text" required="" autocomplete="off" [(ngModel)]="EtudiantToUpdate.Etd_Mail" />
+                                </div>
+                                <!-- <div class="mt-0 mb-3 col-md-12">
+                                  <label>Email 2</label>
+                                  <input class="form-control" id="Email2" type="text" required="" autocomplete="off" [(ngModel)]="ClientToUpdate.Email2" />
+                                </div> -->
+                                <!-- <div class="mt-0 mb-3 col-md-12">
+                                  <label>Téléphone</label>
+                                  <div class="row">
+                                    <div class="col-sm-6">
+                                      <input class="form-control" id="Telephone1" type="text" required="" autocomplete="off" [(ngModel)]="ClientToUpdate.Telephone1" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                      <input class="form-control" id="Telephone2" type="text" required="" autocomplete="off" [(ngModel)]="ClientToUpdate.Telephone2" />
+                                    </div>
+                                  </div>
+                                </div> -->
+                              </div>
+                              <button class="btn btn-secondary update-contact" type="button" (click)="SubmitUpdateClient()">Modifier</button>
+                              <button class="btn btn-primary" type="button" (click)="CancelUpdateClient()">Annuler</button>
+                            </div>
+                          </div>
+                          <!-- #endregion EditClient -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="fade tab-pane" id="pills-maroc" role="tabpanel" aria-labelledby="pills-maroc">
+                  <div class="card mb-0">
+                    <div class="card-header d-flex">
+                      <h5>Installation au Maroc</h5>
+                      <span class="f-14 pull-right mt-0">10 Contacts</span>
+                    </div>
+                    <div class="card-body p-0">
+                      <div class="row list-persons">
+                        <div class="col-xl-4 xl-50 col-md-5">
+                          <div class="nav flex-column nav-pills" id="v-pills-tab1" role="tablist" aria-orientation="vertical">
+                            <a class="nav-link active" id="v-pills-iduser-tab" data-bs-toggle="pill" href="#v-pills-iduser" role="tab" aria-controls="v-pills-iduser" aria-selected="true">
+                              <div class="media">
+                                <img class="img-50 img-fluid m-r-20 rounded-circle" src="assets/images/user/user.png" alt="" />
+                                <div class="media-body">
+                                  <h6>Mark jecno</h6>
+                                  <p>markjecno&#64;gmail.com</p>
+                                </div>
+                              </div> </a
+                            ><a class="nav-link" id="v-pills-iduser1-tab" data-bs-toggle="pill" href="#v-pills-iduser1" role="tab" aria-controls="v-pills-iduser1" aria-selected="false">
+                              <div class="media">
+                                <img class="img-50 img-fluid m-r-20 rounded-circle" src="assets/images/user/3.jpg" alt="" />
+                                <div class="media-body">
+                                  <h6>Jason Borne</h6>
+                                  <p>jasonb&#64;gmail.com</p>
+                                </div>
+                              </div> </a
+                            ><a class="nav-link" id="v-pills-iduser2-tab" data-bs-toggle="pill" href="#v-pills-iduser2" role="tab" aria-controls="v-pills-iduser2" aria-selected="false">
+                              <div class="media">
+                                <img class="img-50 img-fluid m-r-20 rounded-circle" src="assets/images/user/4.jpg" alt="" />
+                                <div class="media-body">
+                                  <h6>Sarah Loren</h6>
+                                  <p>barnes&#64;gmail.com</p>
+                                </div>
+                              </div> </a
+                            ><a class="nav-link" id="v-pills-iduser3-tab" data-bs-toggle="pill" href="#v-pills-iduser3" role="tab" aria-controls="v-pills-iduser3" aria-selected="false">
+                              <div class="media">
+                                <img class="img-50 img-fluid m-r-20 rounded-circle" src="assets/images/user/10.jpg" alt="" />
+                                <div class="media-body">
+                                  <h6>Andew Jon</h6>
+                                  <p>andrewj&#64;gmail.com</p>
+                                </div>
+                              </div>
+                            </a>
+                          </div>
+                        </div>
+                        <div class="col-xl-8 xl-50 col-md-7">
+                          <div class="tab-content" id="v-pills-tabContent1">
+                            <div class="tab-pane fade show active" id="v-pills-iduser" role="tabpanel" aria-labelledby="v-pills-iduser-tab">
+                              <div class="profile-mail">
+                                <div class="media">
+                                  <img class="img-100 img-fluid m-r-20 rounded-circle update_img_5" src="assets/images/user/user.png" alt="" />
+                                  <div class="media-body mt-0">
+                                    <h5><span class="first_name_5">Mark </span><span class="last_name_5">jecno</span></h5>
+                                    <p class="email_add_5">markjecno&#64;gmail.com</p>
+                                    <ul>
+                                      <li><a href="javascript:void(0)" (click)="Print.openModal()">Print</a></li>
+                                    </ul>
+                                  </div>
+                                </div>
+                                <div class="email-general">
+                                  <h6>General</h6>
+                                  <p>Email Address: <span class="font-primary email_add_5">markjecno&#64;gmail.com</span></p>
+                                  <div class="gender">
+                                    <h6>Personal</h6>
+                                    <p>Gender: <span>Male</span></p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="tab-pane fade" id="v-pills-iduser1" role="tabpanel" aria-labelledby="v-pills-iduser1-tab">
+                              <div class="profile-mail">
+                                <div class="media">
+                                  <img class="img-100 img-fluid m-r-20 rounded-circle update_img_6" src="assets/images/user/3.jpg" alt="" />
+                                  <div class="media-body mt-0">
+                                    <h5><span class="first_name_6">Jason </span><span class="last_name_6">Borne</span></h5>
+                                    <p class="email_add_6">jasonb&#64;gmail.com</p>
+                                    <ul>
+                                      <li><a href="javascript:void(0)" (click)="Print.openModal()">Print</a></li>
+                                    </ul>
+                                  </div>
+                                </div>
+                                <div class="email-general">
+                                  <h6>General</h6>
+                                  <p>Email Address: <span class="font-primary email_add_6">jasonb&#64;gmail.com</span></p>
+                                  <div class="gender">
+                                    <h6>Personal</h6>
+                                    <p>Gender: <span>Male</span></p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="tab-pane fade" id="v-pills-iduser2" role="tabpanel" aria-labelledby="v-pills-iduser2-tab">
+                              <div class="profile-mail">
+                                <div class="media">
+                                  <img class="img-100 img-fluid m-r-20 rounded-circle update_img_7" src="assets/images/user/4.jpg" alt="" />
+                                  <div class="media-body mt-0">
+                                    <h5><span class="first_name_7">Sarah </span><span class="last_name_7">Loren</span></h5>
+                                    <p class="email_add_7">barnes&#64;gmail.com</p>
+                                    <ul>
+                                      <li><a href="javascript:void(0)" (click)="Print.openModal()">Print</a></li>
+                                    </ul>
+                                  </div>
+                                </div>
+                                <div class="email-general">
+                                  <h6>General</h6>
+                                  <p>Email Address: <span class="font-primary email_add_7">barnes&#64;gmail.com</span></p>
+                                  <div class="gender">
+                                    <h6>Personal</h6>
+                                    <p>Gender: <span>Female</span></p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="tab-pane fade" id="v-pills-iduser3" role="tabpanel" aria-labelledby="v-pills-iduser3-tab">
+                              <div class="profile-mail">
+                                <div class="media">
+                                  <img class="img-100 img-fluid m-r-20 rounded-circle update_img_8" src="assets/images/user/10.jpg" alt="" />
+                                  <div class="media-body mt-0">
+                                    <h5><span class="first_name_8">Andew </span><span class="last_name_8">Jon</span></h5>
+                                    <p class="email_add_8">andrewj&#64;gmail.com</p>
+                                    <ul>
+                                      <li><a href="javascript:void(0)" (click)="Print.openModal()">Print</a></li>
+                                    </ul>
+                                  </div>
+                                </div>
+                                <div class="email-general">
+                                  <h6>General</h6>
+                                  <p>Email Address: <span class="font-primary email_add_8">andrewj&#64;gmail.com</span></p>
+                                  <div class="gender">
+                                    <h6>Personal</h6>
+                                    <p>Gender: <span>Female</span></p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="fade tab-pane" id="pills-france" role="tabpanel" aria-labelledby="pills-france">
+                  <div class="card mb-0">
+                    <div class="card-header d-flex">
+                      <h5>Retour en France</h5>
+                      <span class="f-14 pull-right mt-0">10 Contacts</span>
+                    </div>
+                    <div class="card-body p-0">
+                      <div class="row list-persons">
+                        <div class="col-xl-4 xl-50 col-md-5">
+                          <div class="nav flex-column nav-pills" id="v-pills-tab1" role="tablist" aria-orientation="vertical">
+                            <a class="nav-link active" id="v-pills-iduser-tab" data-bs-toggle="pill" href="#v-pills-iduser" role="tab" aria-controls="v-pills-iduser" aria-selected="true">
+                              <div class="media">
+                                <img class="img-50 img-fluid m-r-20 rounded-circle" src="assets/images/user/user.png" alt="" />
+                                <div class="media-body">
+                                  <h6>Mark jecno</h6>
+                                  <p>markjecno&#64;gmail.com</p>
+                                </div>
+                              </div> </a
+                            ><a class="nav-link" id="v-pills-iduser1-tab" data-bs-toggle="pill" href="#v-pills-iduser1" role="tab" aria-controls="v-pills-iduser1" aria-selected="false">
+                              <div class="media">
+                                <img class="img-50 img-fluid m-r-20 rounded-circle" src="assets/images/user/3.jpg" alt="" />
+                                <div class="media-body">
+                                  <h6>Jason Borne</h6>
+                                  <p>jasonb&#64;gmail.com</p>
+                                </div>
+                              </div> </a
+                            ><a class="nav-link" id="v-pills-iduser2-tab" data-bs-toggle="pill" href="#v-pills-iduser2" role="tab" aria-controls="v-pills-iduser2" aria-selected="false">
+                              <div class="media">
+                                <img class="img-50 img-fluid m-r-20 rounded-circle" src="assets/images/user/4.jpg" alt="" />
+                                <div class="media-body">
+                                  <h6>Sarah Loren</h6>
+                                  <p>barnes&#64;gmail.com</p>
+                                </div>
+                              </div> </a
+                            ><a class="nav-link" id="v-pills-iduser3-tab" data-bs-toggle="pill" href="#v-pills-iduser3" role="tab" aria-controls="v-pills-iduser3" aria-selected="false">
+                              <div class="media">
+                                <img class="img-50 img-fluid m-r-20 rounded-circle" src="assets/images/user/10.jpg" alt="" />
+                                <div class="media-body">
+                                  <h6>Andew Jon</h6>
+                                  <p>andrewj&#64;gmail.com</p>
+                                </div>
+                              </div>
+                            </a>
+                          </div>
+                        </div>
+                        <div class="col-xl-8 xl-50 col-md-7">
+                          <div class="tab-content" id="v-pills-tabContent1">
+                            <div class="tab-pane fade show active" id="v-pills-iduser" role="tabpanel" aria-labelledby="v-pills-iduser-tab">
+                              <div class="profile-mail">
+                                <div class="media">
+                                  <img class="img-100 img-fluid m-r-20 rounded-circle update_img_5" src="assets/images/user/user.png" alt="" />
+                                  <div class="media-body mt-0">
+                                    <h5><span class="first_name_5">Mark </span><span class="last_name_5">jecno</span></h5>
+                                    <p class="email_add_5">markjecno&#64;gmail.com</p>
+                                    <ul>
+                                      <li><a href="javascript:void(0)" (click)="Print.openModal()">Print</a></li>
+                                    </ul>
+                                  </div>
+                                </div>
+                                <div class="email-general">
+                                  <h6>General</h6>
+                                  <p>Email Address: <span class="font-primary email_add_5">markjecno&#64;gmail.com</span></p>
+                                  <div class="gender">
+                                    <h6>Personal</h6>
+                                    <p>Gender: <span>Male</span></p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="tab-pane fade" id="v-pills-iduser1" role="tabpanel" aria-labelledby="v-pills-iduser1-tab">
+                              <div class="profile-mail">
+                                <div class="media">
+                                  <img class="img-100 img-fluid m-r-20 rounded-circle update_img_6" src="assets/images/user/3.jpg" alt="" />
+                                  <div class="media-body mt-0">
+                                    <h5><span class="first_name_6">Jason </span><span class="last_name_6">Borne</span></h5>
+                                    <p class="email_add_6">jasonb&#64;gmail.com</p>
+                                    <ul>
+                                      <li><a href="javascript:void(0)" (click)="Print.openModal()">Print</a></li>
+                                    </ul>
+                                  </div>
+                                </div>
+                                <div class="email-general">
+                                  <h6>General</h6>
+                                  <p>Email Address: <span class="font-primary email_add_6">jasonb&#64;gmail.com</span></p>
+                                  <div class="gender">
+                                    <h6>Personal</h6>
+                                    <p>Gender: <span>Male</span></p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="tab-pane fade" id="v-pills-iduser2" role="tabpanel" aria-labelledby="v-pills-iduser2-tab">
+                              <div class="profile-mail">
+                                <div class="media">
+                                  <img class="img-100 img-fluid m-r-20 rounded-circle update_img_7" src="assets/images/user/4.jpg" alt="" />
+                                  <div class="media-body mt-0">
+                                    <h5><span class="first_name_7">Sarah </span><span class="last_name_7">Loren</span></h5>
+                                    <p class="email_add_7">barnes&#64;gmail.com</p>
+                                    <ul>
+                                      <li><a href="javascript:void(0)" (click)="Print.openModal()">Print</a></li>
+                                    </ul>
+                                  </div>
+                                </div>
+                                <div class="email-general">
+                                  <h6>General</h6>
+                                  <p>Email Address: <span class="font-primary email_add_7">barnes&#64;gmail.com</span></p>
+                                  <div class="gender">
+                                    <h6>Personal</h6>
+                                    <p>Gender: <span>Female</span></p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="tab-pane fade" id="v-pills-iduser3" role="tabpanel" aria-labelledby="v-pills-iduser3-tab">
+                              <div class="profile-mail">
+                                <div class="media">
+                                  <img class="img-100 img-fluid m-r-20 rounded-circle update_img_8" src="assets/images/user/10.jpg" alt="" />
+                                  <div class="media-body mt-0">
+                                    <h5><span class="first_name_8">Andew </span><span class="last_name_8">Jon</span></h5>
+                                    <p class="email_add_8">andrewj&#64;gmail.com</p>
+                                    <ul>
+                                      <li><a href="javascript:void(0)" (click)="Print.openModal()">Print</a></li>
+                                    </ul>
+                                  </div>
+                                </div>
+                                <div class="email-general">
+                                  <h6>General</h6>
+                                  <p>Email Address: <span class="font-primary email_add_8">andrewj&#64;gmail.com</span></p>
+                                  <div class="gender">
+                                    <h6>Personal</h6>
+                                    <p>Gender: <span>Female</span></p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="right-history" [class.show]="history">
+                  <div class="modal-header p-20" (click)="showHistory()">
+                    <h6 class="modal-title w-100">
+                      Contact History<span class="pull-right"
+                        ><a class="closehistory" href="javascript:void(0)"><i class="icofont icofont-close"></i></a
+                      ></span>
+                    </h6>
+                  </div>
+                  <div class="history-details">
+                    <div class="text-center">
+                      <i class="icofont icofont-ui-edit"></i>
+                      <p>Contact has not been modified yet.</p>
+                    </div>
+                    <div class="media">
+                      <i class="icofont icofont-star me-3"></i>
+                      <div class="media-body mt-0">
+                        <h6 class="mt-0">Contact Created</h6>
+                        <p class="mb-0">Contact is created via mail</p>
+                        <span class="f-12">Sep 10, 2022 4:00</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Container-fluid Ends-->

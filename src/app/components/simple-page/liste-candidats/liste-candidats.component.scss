@@ -1,0 +1,82 @@
+.container-fluid {
+  padding: 20px;
+}
+
+.filter-card {
+  background-color: #f9f9f9;
+  margin-bottom: 20px;
+}
+
+.student-list-card,
+.parcours-card,
+.payments-card {
+  background-color: #ffffff;
+}
+.point-cursor {
+  cursor: pointer;
+}
+.card-header {
+  // background-color: #7366FE;
+  color: #000000;
+}
+
+.table {
+  width: 100%;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #f2f2f2;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border: none;
+  color: #ffffff;
+}
+
+.student-photo {
+  width: 50px; /* Adjust size as needed */
+  height: 50px;
+  object-fit: cover;
+}
+
+.table th,
+.table td {
+  vertical-align: middle; /* Center align content vertically */
+}
+
+.table td button {
+  margin-right: 5px; /* Space between action buttons */
+}
+
+/* Scrollable table container */
+.student-list-card .card-body {
+  max-height: 500px; /* Set a maximum height for the table container */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.parcours-card .card-body,
+.payments-card .card-body {
+  max-height: 500px; /* Set a maximum height for the other tables if needed */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.fixed_header thead {
+  position: sticky;
+  top: 0;
+  background-color: #ffffff; /* Choisissez la couleur de fond en fonction de votre design */
+  // z-index: 1000; /* Assurez-vous que l'en-tête reste au-dessus des autres éléments */
+  // box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4); /* Optionnel : ajoute une ombre */
+}
+
+.fixed_header th, .fixed_header td {
+  // padding: 8px;
+  text-align: center;
+  // border: 1px solid #ddd;
+}
+
+/* Pour s'assurer que le défilement ne dépasse pas les limites */
+.table-responsive {
+  // max-height: 520px; /* Ajustez selon la hauteur souhaitée */
+  overflow-y: auto;
+}

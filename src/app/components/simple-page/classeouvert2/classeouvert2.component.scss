@@ -1,0 +1,84 @@
+.table-container {
+    max-height: 50vh; /* Hauteur maximale en fonction de la taille de l'écran */
+    overflow-y: auto; /* Active le défilement vertical */
+  }
+  .table thead th {
+    position: sticky;
+    top: 0;
+    background-color: white; /* Garde le fond visible lors du défilement */
+    z-index: 1;
+  }
+
+  
+  .fixed_header thead {
+    position: sticky;
+    top: 0;
+    background-color: #ffffff; /* Choisissez la couleur de fond en fonction de votre design */
+    // z-index: 1000; /* Assurez-vous que l'en-tête reste au-dessus des autres éléments */
+    // box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4); /* Optionnel : ajoute une ombre */
+  }
+  
+  .fixed_header th, .fixed_header td {
+    // padding: 8px;
+    text-align: center;
+    // border: 1px solid #ddd;
+  }
+  
+  /* Pour s'assurer que le défilement ne dépasse pas les limites */
+  .table-responsive {
+    max-height: 70vh; /* Ajustez selon la hauteur souhaitée */
+    overflow-y: auto;
+  }
+
+  .card-header{
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .card-body{
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  td{
+    padding-top: 5px;
+    padding-bottom: 5px; 
+  }
+
+  .fixed_header {
+    width: 100%;
+    display: block;
+    overflow-y: auto;
+  }
+  
+ 
+  
+  /* Fix the header to the top */
+  table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fa;
+  }
+  
+  /* Table Wrapper */
+.table-wrapper {
+  // max-height: calc(100vh - 300px); /* Ajustez la hauteur selon votre besoin */
+  overflow-y: auto;
+  text-align: center;
+}
+
+/* Header fixe */
+table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #ffffff;
+  z-index: 1020;
+}
+
+
+/* Ajustement des paddings pour un design compact */
+.card-body {
+  padding: 0;
+}
+
+.card-header {
+  padding: 5px;
+}

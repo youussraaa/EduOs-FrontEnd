@@ -1,0 +1,63 @@
+<div class="page-background">
+  <div class="overlay"></div>
+  <!-- Filtre sombre ajouté ici -->
+  <div class="form-container" *ngIf="Ecole != null">
+    <h2>Inscription du candidat dans {{ Ecole.Ecole_Nom }}</h2>
+    <form>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="addNom" class="form-label">Nom</label>
+          <input type="text" id="addNom" class="form-control" [(ngModel)]="newCandidat.Cnd_Nom" name="addNom" />
+        </div>
+        <div class="col">
+          <label for="addPrenom" class="form-label">Prénom</label>
+          <input type="text" id="addPrenom" class="form-control" [(ngModel)]="newCandidat.Cnd_Prenom" name="addPrenom" />
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="sexe">Sexe :</label>
+          <select class="form-control" id="sexe" [(ngModel)]="selectedTypeSexe" name="typeSexe">
+            <option *ngFor="let typeSexe of TypeSexeList" [value]="typeSexe.key">{{ typeSexe.libelle }}</option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="addDateNaissance" class="form-label">Date de naissance</label>
+          <input type="date" id="addDateNaissance" class="form-control" [(ngModel)]="newCandidat.Cnd_DateNaissance" name="addDateNaissance" />
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="addLieuNaissance" class="form-label">Lieu de naissance</label>
+          <input type="text" id="addLieuNaissance" class="form-control" [(ngModel)]="newCandidat.Cnd_LieuNaissance" name="addLieuNaissance" />
+        </div>
+        <div class="col">
+          <label for="addCIN" class="form-label">CIN</label>
+          <input type="text" id="addCIN" class="form-control" [(ngModel)]="newCandidat.Cnd_CIN" name="addCIN" />
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="addEmail" class="form-label">Email</label>
+          <input type="text" id="addEmail" class="form-control" [(ngModel)]="newCandidat.Cnd_Mail" name="addEmail" />
+        </div>
+        <div class="col">
+          <label for="addAdresse" class="form-label">Adresse</label>
+          <input type="text" id="addAdresse" class="form-control" [(ngModel)]="newCandidat.Cnd_Adresse" name="addAdresse" />
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="addTel" class="form-label">Téléphone</label>
+          <input type="text" id="addTel" class="form-control" [(ngModel)]="newCandidat.Cnd_Tel" name="addTel" />
+        </div>
+        <div class="col">
+          <label for="photoUpload">Photo : </label>
+          <input type="file" (change)="onImageSelected($event)" id="photoUpload" accept="image/*" name="photoEnseignant" />
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary" (click)="onSubmit()">Enregistrer</button>
+    </form>
+  </div>
+</div>

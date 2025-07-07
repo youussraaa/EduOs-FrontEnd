@@ -1,0 +1,166 @@
+<div class="logo-wrapper">
+  <div class="d-flex">
+    <a routerLink="/" class="row align-items-center logo-circle">
+      <img class="img-fluid" style="height: 3em; width: auto; padding: 0px;" src="assets/images/logo/logo-icon.png" alt="" />
+      <h2 class="col" style="margin-top: 25px; padding: 8px; font-size: 25px;"><strong>{{ menuTitle }}</strong></h2>
+    </a>
+    <span role="button" class="row align-items-center ms-2" style="color: #7366ff;" *ngIf="Ecoles != null && Ecoles.length > 1">
+      <i class="fa fa-edit fs-5" (click)="ChooseEcole(dialogEcole)"></i>
+    </span>
+  </div>
+  <div class="back-btn" (click)="sidebarToggle()">
+    <i class="fa fa-angle-left"></i>
+  </div>
+  <div class="toggle-sidebar" (click)="sidebarToggle()">
+    <app-feather-icons [icon]="'grid'" class="status_toggle middle sidebar-toggle"></app-feather-icons>
+  </div>
+</div>
+<div class="logo-icon-wrapper">
+  <a href="javascript:void(0)">
+    <img class="img-fluid" src="assets\images\logo\logo-icon.png" alt="" />
+  </a>
+</div>
+<nav class="sidebar-main">
+  <div class="left-arrow" id="left-arrow" [class.d-none]="leftArrowNone" (click)="scrollToLeft()">
+    <app-feather-icons [icon]="'arrow-left'"></app-feather-icons>
+  </div>
+  <div id="sidebar-menu" [ngStyle]="{ marginLeft: this.layout.config.settings.layout == 'Rome' || 'Singapore' || 'Barcelona' ? margin + 'px' : '0px' }">
+    <ul class="sidebar-links custom-scrollbar">
+      <div class="simplebar-wrapper">
+        <div class="simplebar-mask">
+          <div class="simplebar-offset">
+            <div class="simplebar-content-wrapper">
+              <div class="simplebar-content">
+                <li class="back-btn">
+                  <a href="javascript:void(0)">
+                    <img class="img-fluid" src="assets/images/logo/logo-icon.png" alt="" />
+                  </a>
+                  <div class="mobile-back text-end" (click)="sidebarToggle()">
+                    <span>Back</span>
+                    <i class="fa fa-angle-right ps-2" aria-hidden="true"></i>
+                  </div>
+                </li>
+
+                <li [class]="menuItem.headTitle1 ? 'sidebar-main-title' : 'sidebar-list'" *ngFor="let menuItem of menuItems" [ngClass]="{ active: menuItem.active }">
+                  <div *ngIf="menuItem.headTitle1">
+                    <h6 class="lan-1">{{ menuItem.headTitle1 | translate }}</h6>
+                  </div>
+
+                  <label class="badge badge-{{ menuItem.badgeType }}" *ngIf="menuItem.badgeType && menuItem.badgeValue">{{ menuItem.badgeValue }}</label>
+                  <!-- Sub -->
+                  <a href="javascript:void(0)" class="sidebar-link sidebar-title" [class.link-nav]="!menuItem.children" [ngClass]="{ active: menuItem.active }"
+                    *ngIf="menuItem.type === 'sub'" (click)="toggletNavActive(menuItem)">
+                    <app-svg-icon [icon]="menuItem.icon"></app-svg-icon>
+                    <span>{{ menuItem.title | translate }}</span>
+                    <div class="according-menu">
+                      <i class="fa fa-angle-{{ menuItem.active ? 'down' : 'right' }} pull-right" *ngIf="menuItem.children"></i>
+                    </div>
+                  </a>
+                  <!-- Link -->
+                  <a [routerLink]="!menuItem.type ? null : [menuItem.path]" routerLinkActive="active" class="sidebar-link sidebar-title" [class.link-nav]="!menuItem.children"
+                    [ngClass]="{ active: menuItem.active }" *ngIf="menuItem.type === 'link'">
+                    <app-svg-icon [icon]="menuItem.icon"></app-svg-icon>
+                    <span>{{ menuItem.title | translate }}</span>
+                    <div class="according-menu">
+                      <i class="fa fa-angle-{{ menuItem.active ? 'down' : 'right' }} pull-right" *ngIf="menuItem.children"></i>
+                    </div>
+                  </a>
+                  <!-- External Link -->
+                  <a href="{{ !menuItem.type ? null : menuItem.path }}" class="sidebar-link sidebar-title" [class.link-nav]="!menuItem.children"
+                    [ngClass]="{ active: menuItem.active }" *ngIf="menuItem.type === 'extLink'">
+                    <app-svg-icon [icon]="menuItem.icon"></app-svg-icon><span>{{ menuItem.title | translate }}</span>
+                    <div class="according-menu">
+                      <i class="fa fa-angle-{{ menuItem.active ? 'down' : 'right' }} pull-right" *ngIf="menuItem.children"></i>
+                    </div>
+                  </a>
+                  <!-- External Tab Link -->
+                  <a href="{{ !menuItem.type ? null : menuItem.path }}" target="_blank" class="sidebar-link sidebar-title" [class.link-nav]="!menuItem.children"
+                    [ngClass]="{ active: menuItem.active }" *ngIf="menuItem.type === 'extTabLink'">
+                    <app-svg-icon [icon]="menuItem.icon"></app-svg-icon>
+                    <span>{{ menuItem.title }}</span>
+                    <div class="according-menu">
+                      <i class="fa fa-angle-{{ menuItem.active ? 'down' : 'right' }} pull-right" *ngIf="menuItem.children"></i>
+                    </div>
+                  </a>
+                  <!-- 2nd Level Menu -->
+                  <ul class="sidebar-submenu" [ngClass]="{ active: menuItem.active }" [ngClass]="{ 'menu-open': menuItem.active, 'menu-close': !menuItem.active }"
+                    *ngIf="menuItem.children" [style.display]="menuItem.active ? 'block' : 'none'">
+                    <li *ngFor="let childrenItem of menuItem.children" [ngClass]="{ active: childrenItem.active }">
+                      <!-- Sub -->
+                      <a class="submenu-title" href="javascript:void(0)" *ngIf="childrenItem.type === 'sub'" (click)="toggletNavActive(childrenItem)">
+                        <span> {{ childrenItem.title | translate }}</span>
+                        <div class="according-menu">
+                          <i class="fa fa-angle-{{ childrenItem.active ? 'down' : 'right' }} pull-right" *ngIf="childrenItem.children"></i>
+                        </div>
+                      </a>
+                      <!-- Link -->
+                      <a class="submenu-title" [routerLink]="!childrenItem.type ? null : [childrenItem.path]" *ngIf="childrenItem.type === 'link'" routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: true }">
+                        {{ childrenItem.title | translate }}
+                        <i class="fa fa-angle-down pull-right" *ngIf="childrenItem.children"></i>
+                      </a>
+                      <!-- External Link -->
+                      <a class="submenu-title" href="{{ !childrenItem.type ? null : childrenItem.path }}" *ngIf="childrenItem.type === 'extLink'" routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: true }">
+                        {{ childrenItem.title | translate }}
+                        <i class="fa fa-angle-down pull-right" *ngIf="childrenItem.children"></i>
+                      </a>
+                      <!-- External Tab Link -->
+                      <a class="submenu-title" href="{{ !childrenItem.type ? null : childrenItem.path }}" target="_blank" *ngIf="childrenItem.type === 'extTabLink'">
+                        <span>{{ childrenItem.title | translate }}</span>
+                        <i class="fa fa-angle-down pull-right" *ngIf="childrenItem.children"></i>
+                      </a>
+                      <!-- 3rd Level Menu -->
+                      <ul class="nav-sub-childmenu submenu-content" *ngIf="childrenItem.children" [ngClass]="{ active: childrenItem.active }"
+                        [ngClass]="{ 'menu-open': childrenItem.active, 'menu-close': !childrenItem.active }" [style.display]="childrenItem.active ? 'block' : 'none'">
+                        <li *ngFor="let childrenSubItem of childrenItem.children" [ngClass]="{ active: childrenSubItem.active }">
+                          <!-- Link -->
+                          <a [routerLink]="!childrenSubItem.type ? null : [childrenSubItem.path]" *ngIf="childrenSubItem.type === 'link'" routerLinkActive="active"
+                            [routerLinkActiveOptions]="{ exact: true }">
+                            {{ childrenSubItem.title | translate }}
+                          </a>
+                          <!-- External Link -->
+                          <a href="{{ !childrenSubItem.type ? null : childrenSubItem.path }}" *ngIf="childrenSubItem.type === 'extLink'" routerLinkActive="active"
+                            [routerLinkActiveOptions]="{ exact: true }">
+                            {{ childrenSubItem.title | translate }}
+                          </a>
+                          <!-- External Tab Link -->
+                          <a href="{{ !childrenSubItem.type ? null : childrenSubItem.path }}" target="_blank" *ngIf="childrenSubItem.type === 'extTabLink'">
+                            {{ childrenSubItem.title | translate }}
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ul>
+  </div>
+  <div class="right-arrow" id="right-arrow" [class.d-none]="rightArrowNone" (click)="scrollToRight()">
+    <app-feather-icons [icon]="'arrow-right'"></app-feather-icons>
+  </div>
+  <div class="text-under-navbar" style="background-color: blue; text-align: center; padding: 20px; font-size: 1.2em; margin-bottom: 50px">
+    <p>Edu-OS 2</p>
+  </div>
+</nav>
+
+<ng-template #dialogEcole let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title fs-4">Changer d'école</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex justify-content-center">
+      <button class="btn btn-primary me-2" *ngFor="let ecole of Ecoles" (click)="onEcoleClick(ecole,modal)">
+        {{ ecole.Ecole_Nom }}
+      </button>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modal.dismiss()">Fermer</button>
+  </div>
+</ng-template>

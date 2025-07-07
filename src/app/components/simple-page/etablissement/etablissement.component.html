@@ -1,0 +1,68 @@
+<app-breadcrumb [title]="'informations sur votre ecole'"></app-breadcrumb>
+<div class="container-fluid base-inputs">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <!-- <div class="card-header">
+          <h3>Étape 1 - Veuillez remplir ces informations</h3>
+        </div> -->
+        <form class="form theme-form" id="form1">
+          <div class="card-body" *ngIf="Etablissement != null">
+            <div class="row mb-3">
+              <div class="col">
+                <label for="NomEtablissement">Nom de l'établissement :</label>
+                <input class="form-control" [(ngModel)]="Etablissement.Ecole_Nom" id="NomEtablissement" type="text" name="nomEtablissement" placeholder="Nom de l'établissement" />
+              </div>
+              <div class="col">
+                <label for="education">Type d'établissement :</label>
+                <div>
+                  <div *ngFor="let typeEcole of Enums.EcoleType" class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" [checked]="isChecked(typeEcole.EcoleType_Id)" [value]="typeEcole.EcoleType_Id" (change)="onCheckboxChange($event)" />
+                    <label class="form-check-label">{{ typeEcole.EcoleType_Nom }}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <label for="adresse">Adresse :</label>
+                <input class="form-control" [(ngModel)]="Etablissement.Ecole_Adresse" id="adresse" name="adresseEtablissement" type="text" placeholder="Adresse" />
+              </div>
+              <div class="col">
+                <label for="telephone">Numéro de téléphone :</label>
+                <input class="form-control" [(ngModel)]="Etablissement.Ecole_Tel" id="telephone" name="telEtablissement" type="tel" placeholder="Téléphone" />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <label for="mail">Mail :</label>
+                <input class="form-control" [(ngModel)]="Etablissement.Ecole_Mail" id="mail" type="email" name="mailEtablissement" placeholder="name@example.com" />
+              </div>
+              <div class="col">
+                <label for="gsm">GSM :</label>
+                <input class="form-control" [(ngModel)]="Etablissement.Ecole_Gsm" id="gsm" type="tel" name="gsmEtablissement" placeholder="Gsm" />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <label for="Description">Description :</label>
+                <input class="form-control" [(ngModel)]="Etablissement.Ecole_Description" id="Description" name="descriptionEtablissement" type="text" placeholder="Description" />
+              </div>
+              <div class="col">
+                <label for="logoUpload">Logo :</label>
+                <div class="custom-file-upload">
+                  <input type="file" (change)="onImageSelected($event)" id="logoUpload" accept="image/*" name="logoEtablissement" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer text-end">
+            <div class="col-sm-9 offset-sm-3">
+              <button class="btn btn-success" type="submit" (click)="onSubmit()">Modifier</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

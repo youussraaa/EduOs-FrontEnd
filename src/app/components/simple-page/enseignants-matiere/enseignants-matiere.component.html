@@ -1,0 +1,125 @@
+<div class="row" [style.height]="dockManagerConfig.height">
+  <div class="card student-list-card m-2">
+    <div class="card-header p-2">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 class="fs-4">{{ gridConfig.title }} {{ gridConfig.data != null && gridConfig.data.length > 0 ? '(' + gridConfig.data.length + ')' : '' }}</h4>
+        <!-- <input type="text" [style.width]="'50%'" class="form-control" (change)="OnFiltreChange($event,'null')" (keyup)="OnFiltreChange($event,'null')" [(ngModel)]="filterParams.global" placeholder="Filtre" /> -->
+
+        <div class="d-flex gap-2">
+          <!-- <button type="button" class="igx-button igx-button--outlined ng-star-inserted" (click)="toggleSearchParams()" title="Afficher/masquer la barre de recherche">
+            <i style="cursor: pointer" class="fa fa-filter fs-4"></i>
+          </button> -->
+
+          <!-- <button type="button" class="igx-button igx-button--outlined ng-star-inserted" (click)="openLevelModal(null, levelModal)" title="Ajouter Niveau">
+             Ajouter
+          </button> -->
+
+          <div ngbDropdown class="d-inline-block" placement="bottom">
+            <button class="btn btn-outline-primary" id="gridEtudiantColumns" ngbDropdownToggle>Columns</button>
+            <div ngbDropdownMenu aria-labelledby="gridEtudiantColumns" style="overflow-y: scroll; max-height: 400px; width: 200px;">
+              <div *ngFor="let column of gridConfig.GetEnabledColumns(); let index=index;">
+                <div class="checkbox pt-1 pb-1 p-2 pr-2" style="color: black;">
+                  <input [id]="'checkbox_0_'+index" type="checkbox" [(ngModel)]="column.visible" />
+                  <label [for]="'checkbox_0_'+index">{{ column.header }}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    <div class="card-body p-2">
+      <div class="table-responsive" [style.maxHeight]="gridConfig.height" style="overflow-y: auto;">
+        <table class="table fixed_header">
+          <thead>
+            <tr class="table-header">
+              <th></th>
+              <th *ngFor="let column of gridConfig.GetVisibleColumns()" style="color: rgb(0, 0, 0); text-align: left;">{{ column.header }}</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="gridConfig.data == null">
+            <tr align="center">
+              <th><i>Chargement ...</i></th>
+            </tr>
+          </tbody>
+
+          <tbody *ngIf="gridConfig.data?.length == 0">
+            <tr align="center">
+              <th [attr.colspan]="gridConfig.GetVisibleColumns().length+1"><i>{{ gridConfig.emptyTemplateText }}</i></th>
+            </tr>
+          </tbody>
+
+          <tbody *ngIf="gridConfig.data != null && gridConfig.data.length > 0">
+            <tr *ngFor="let item of gridConfig.data" [id]="'row_'+item.Niv_Id">
+
+              <td (click)="ShowHideSubGrid(item.Niv_Id)">
+                <span *ngIf="item.isSubGridVisible == false"><i class="fa fa-chevron-right"></i></span>
+                <span *ngIf="item.isSubGridVisible == true"><i class="fa fa-chevron-down"></i></span>
+              </td>
+
+              <td *ngFor="let column of gridConfig.GetVisibleColumns()"
+                [style.textAlign]="column.dataType == 'string' ? 'left' : column.dataType == 'number' ? 'right' : column.dataType == 'date' ? 'center' : 'center'">
+
+                <span [ngSwitch]="column.dataType">
+                  <span *ngSwitchCase="'string'">{{ item[column.field] }}</span>
+                  <span *ngSwitchCase="'number'">
+                    <span *ngIf="column.isMontant">{{ item[column.field] | number:'1.2-2'}}</span>
+                    <span *ngIf="!column.isMontant">{{ item[column.field] }}</span>
+                  </span>
+                  <span *ngSwitchCase="'date'">{{ item[column.field] | date : "dd/MM/yyyy" }}</span>
+                  <span *ngSwitchCase="'boolean'"><span *ngIf="item[column.field] == true "><i class="fa fa-check"></i></span></span>
+                  <span *ngSwitchDefault>{{ item[column.field] }}</span>
+                </span>
+              </td>
+              
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Editing Class -->
+<ng-template #editModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Modifier la Classe</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="className">Nom de la Classe</label>
+      <input id="className" type="text" class="form-control" [(ngModel)]="selectedClasse.Cls_Nom" />
+    </div>
+    <div class="form-group mt-3">
+      <label for="classDescription">Description de la Classe</label>
+      <input id="classDescription" type="text" class="form-control" [(ngModel)]="selectedClasse.Classe_Description" />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="saveClass(modal)">Enregistrer</button>
+  </div>
+</ng-template>
+
+<!-- Modal for adding Class -->
+<ng-template #addModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title fs-5">Ajouter une Classe</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="className">Nom de la Classe</label>
+      <input id="className" type="text" class="form-control" [(ngModel)]="newClasse.Cls_Nom" />
+    </div>
+    <div class="form-group mt-3">
+      <label for="classDescription">Description de la Classe</label>
+      <input id="classDescription" type="text" class="form-control" [(ngModel)]="newClasse.Classe_Description" />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="saveNewClass(modal)">Enregistrer</button>
+  </div>
+</ng-template>

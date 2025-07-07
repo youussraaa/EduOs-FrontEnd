@@ -1,0 +1,64 @@
+  <igx-grid
+    #Grid
+    width="100%"
+    [height]="gridConfig.height"
+    [allowFiltering]="gridConfig.allowFiltering"
+    [data]="gridConfig.data"
+    [primaryKey]="gridConfig.primaryKey"
+    [emptyGridTemplate]="emptyGridTemplateGrid"
+    [rowEditable]="gridConfig.rowEditable"
+    [rowSelection]="'single'"
+    [cellSelection]="'none'"
+    [columnSelection]="'none'"
+    [displayDensity]="'compact'"
+    [rowHeight]="gridConfig.rowHeight"
+    [groupsExpanded]="false"
+  >
+
+    <igx-grid-toolbar>
+      <igx-grid-toolbar-actions>
+        <button class="btn-primary igx-button igx-button--outlined" type="button" (click)="dialogClasseAnnee.Open(addClasseAnneeModal)">
+          <i style="color: white" class="fa fa-plus"></i>
+        </button>
+        <igx-grid-toolbar-exporter *ngIf="gridConfig.data.length > 0" [exportExcel]="true" [exportCSV]="false" (exportStarted)="(gridConfig.ExportExcel)"></igx-grid-toolbar-exporter>
+        <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+      </igx-grid-toolbar-actions>
+    </igx-grid-toolbar>
+
+    <ng-template ngFor let-column [ngForOf]="gridConfig.columns">
+      <igx-column
+        [cellClasses]="column.dataType == 'string' ? { 'justify-content-start': true } : column.dataType == 'number' ? { 'justify-content-end': true } : { 'justify-content-center': true }"
+        [header]="column.header"
+        [hidden]="!column.visible"
+        [dataType]="column.dataType"
+        [resizable]="column.resizable"
+        [field]="column.field"
+        [formatter]="column.formatter"
+        [sortable]="column.sortable"
+        [filterable]="column.filterable"
+        [editable]="column.editable"
+        [width]="column.width"
+        [disableHiding]="column.disableHiding"
+        [draggable]="column.draggable"
+        [groupable]="column.groupable"
+        [visibleWhenCollapsed]="column.visibleWhenCollapsed"
+      >
+      </igx-column>
+    </ng-template>
+
+    <igx-paginator *ngIf="gridConfig.data?.length > 0" [perPage]="1000" [selectOptions]="[25, 100, 250, 500, 1000, 5000]" [displayDensity]="'compact'">
+      <igx-paginator-content>
+        <div class="col-lg-4"><igx-page-size></igx-page-size></div>
+        <div class="col-lg-4" [align]="'center'" *ngIf="Grid.totalRecords != undefined">{{ Grid.totalRecords }} lignes</div>
+        <div class="col-lg-4"><igx-page-nav></igx-page-nav></div>
+      </igx-paginator-content>
+    </igx-paginator>
+    <igx-action-strip #actionStripGrid>
+      <a style="cursor: pointer" title="Détails classe année" (click)="dialogClasseAnneeMatieres.Open(actionStripGrid.context, editClasseAnneeModal)" class="fs-2 text-primary mx-2">
+        <i class="fa fa-bars"></i>
+      </a>
+      <a style="cursor: pointer" title="Supprimer classe année" (click)="deleteClasseAnnee(actionStripGrid.context)" class="fs-2 text-danger mx-2">
+        <i class="fa fa-trash"></i>
+      </a>
+    </igx-action-strip>
+  </igx-grid>

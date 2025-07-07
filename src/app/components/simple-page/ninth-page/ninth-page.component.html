@@ -1,0 +1,61 @@
+<app-breadcrumb [title]="'Candidats'"></app-breadcrumb>
+<div class="container-fluid basic_table">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <h3>Veuillez remplir ces informations</h3>
+        </div>
+        <div class="card-body">
+          <!-- Formulaire pour ajouter un étudiant -->
+          <form class="mb-4">
+            <div class="row mb-3">
+              <div class="col">
+                <label for="nom">Nom</label>
+                <input id="nom" type="text" [(ngModel)]="newStudent.nom" class="form-control input-sm" placeholder="Nom" />
+              </div>
+              <div class="col">
+                <label for="prenom">Prénom</label>
+                <input id="prenom" type="text" [(ngModel)]="newStudent.prenom" class="form-control input-sm" placeholder="Prénom" />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <label for="dateNaissance">Date de naissance</label>
+                <input id="dateNaissance" type="date" [(ngModel)]="newStudent.dateNaissance" class="form-control input-sm" />
+              </div>
+              <div class="col">
+                <label for="lieuNaissance">Lieu de naissance</label>
+                <input id="lieuNaissance" type="text" [(ngModel)]="newStudent.lieuNaissance" class="form-control input-sm" placeholder="Lieu de naissance" />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <label for="adresse">Adresse</label>
+                <input id="adresse" type="text" [(ngModel)]="newStudent.adresse" class="form-control input-sm" placeholder="Adresse" />
+              </div>
+              <div class="col">
+                <label for="tel">Téléphone</label>
+                <input id="tel" type="text" [(ngModel)]="newStudent.tel" class="form-control input-sm" placeholder="Téléphone" />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <label for="niveau">Niveau</label>
+                <select id="niveau" [(ngModel)]="newStudent.niveau" class="form-control" name="niveau" placeholder="Sélectionner un niveau">
+                  <option value="" disabled selected>Sélectionner un niveau</option>
+                </select>
+              </div>
+              <div class="col">
+                <label for="photo">Photo</label>
+                <input id="photo" type="file" [(ngModel)]="newStudent.photo" class="form-control input-sm" />
+              </div>
+            </div>
+
+            <button class="btn btn-success" (click)="addStudent()">Ajouter candidat</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

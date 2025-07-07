@@ -1,0 +1,251 @@
+<app-breadcrumb [title]="'Encaissement'" active_item="operation"></app-breadcrumb>
+
+<div *ngIf="showSearchParams" id="searchBar" class="card card-body border-0 px-0 px-lg-2 py-2" style="background-color: transparent;">
+  <div class="col-12 pt-2 pb-0">
+    <form class="d-block  d-lg-flex flex-lg-column justify-content-center col-12 px-xl-2 px-2 px-lg-0 px-xl-2">
+      <div class="row col-12 px-0 mx-0">
+        <div class="form-group col-12 col-lg-2 col-md-4 col-sm-6 col-xs-12 mb-2 mb-lg-0 px-1">
+          <input type="date" [(ngModel)]="searchParams.Ope_Date" class="form-control" name="SrchDate" id="SrchDate" aria-describedby="helpId" placeholder="Date">
+        </div>
+        <div class="form-group col-12 col-lg-2 col-md-4 col-sm-6 col-xs-12 mb-2 mb-lg-0 px-1">
+          <select [(ngModel)]="searchParams.Ann_Id" class="form-select" name="SrchAnnee" id="SrchAnnee">
+            <option value="00000000-0000-0000-0000-000000000000" selected>Toutes les années</option> <!-- Option par défaut -->
+            <option *ngFor="let item of Annees" [value]="item.Ann_Id">{{ item.Ann_Nom }}</option>
+          </select>
+        </div>
+        
+        <div class="form-group col-12 col-lg-2 col-md-4 col-sm-6 col-xs-12 mb-2 mb-lg-0 px-1">
+          <input type="search" [(ngModel)]="searchParams.Etd_Nom" class="form-control" name="SrchNom" id="SrchNom" aria-describedby="helpId" placeholder="Nom">
+        </div>
+        <div class="form-group col-12 col-lg-2 col-md-4 col-sm-6 col-xs-12 mb-2 mb-lg-0 px-1">
+          <input type="search" [(ngModel)]="searchParams.Etd_Prenom" class="form-control" name="SrchPrenom" id="SrchPrenom" aria-describedby="helpId" placeholder="Prenom">
+        </div>
+        <div class="form-group col-12 col-lg-2 col-md-4 col-sm-6 col-xs-12 mb-2 mb-lg-0 px-1">
+          <input type="search" [(ngModel)]="searchParams.Etd_Matricule" class="form-control" name="SrchMatricule" id="SrchMatricule" aria-describedby="helpId" placeholder="Matricule">
+        </div>
+        <div class="form-group col-12 col-lg-2 col-md-4 col-sm-6 col-xs-12 mb-2 ms-lg-0">
+          <button type="button" id="getDataBtn1" class="btn btn-primary text-center me-1" data-bs-toggle="tooltip" data-placement="bottom"
+            [title]=" 'DOSSIERETUDIANT.GRIDOTHER.STARTSRCH' | translate " (click)="charger()">
+            Rechercher
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div *ngIf="this.Operations.length>0" class="row" id="infoCard">
+  <div class="col-sm-2" *ngFor="let mode of totalParModePaiement | keyvalue">
+    <div class="card shadow-lg border-0 widget-hover">
+      <div style="padding: 12px;" class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <i class="fa fa-money fs-5 text-warning"></i>
+          <h3 class="card-title fs-6 ms-3 mb-0"><strong>{{mode.key}}</strong></h3>
+        </div>
+        <p class="card-text fs-6 text-center fw-bold">{{mode.value | number:'1.2-2'}} FCFA</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- <div class="container-fluid basic_table">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="table-container">
+          <ng-template #emptyGridTemplateGridComposantSection>
+            <div class="col-lg-12">
+              <p class="text-muted fs-5 text-center">
+                {{ gridConfig.emptyTemplateText != null && gridConfig.emptyTemplateText != "" ? gridConfig.emptyTemplateText : "Aucun élément trouvé" }}
+              </p>
+            </div>
+          </ng-template>
+          <igx-grid
+            #gridComposantSection
+            width="100%"
+            [height]="gridConfig.height"
+            [allowFiltering]="gridConfig.allowFiltering"
+            [data]="gridConfig.data"
+            [primaryKey]="gridConfig.primaryKey"
+            [emptyGridTemplate]="emptyGridTemplateGridComposantSection"
+            [rowEditable]="gridConfig.rowEditable"
+            [rowSelection]="'multiple'"
+            [cellSelection]="'none'"
+            [columnSelection]="'none'"
+            [displayDensity]="'compact'"
+            [rowHeight]="gridConfig.rowHeight"
+            [groupsExpanded]="false"
+          >
+            <ng-template #customGroupRowTemplate let-groupRow>
+              <div class="custom-group-row">
+                <strong>Élève :</strong> {{ groupRow.records[0]?.Etd_Nom }} {{ groupRow.records[0]?.Etd_Prenom }} ||
+              </div>
+            </ng-template>
+
+            <igx-grid-toolbar>
+              <igx-grid-toolbar-actions>
+                <button type="button" class="igx-button igx-button--outlined ng-star-inserted" (click)="toggleSearchParams()">
+                  <i style="cursor: pointer" class="fa fa-filter fs-4" title="Afficher/masquer la barre de recherche" ></i>
+                </button>
+                <button *ngIf="this.Operations.length>0" class="igx-button igx-button--outlined ng-star-inserted" type="button" title="Exporter état de caisse" (click)="exportExcel()">
+                  exporter
+                </button>
+                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+              </igx-grid-toolbar-actions>
+            </igx-grid-toolbar>
+
+            <ng-template ngFor let-column [ngForOf]="gridConfig.columns">
+              <igx-column
+                [cellClasses]="column.dataType == 'string' ? { 'justify-content-start': true } : column.dataType == 'number' ? { 'justify-content-end': true } : { 'justify-content-center': true }"
+                [header]="column.header"
+                [hidden]="!column.visible"
+                [dataType]="column.dataType"
+                [resizable]="column.resizable"
+                [field]="column.field"
+                [formatter]="column.formatter"
+                [sortable]="column.sortable"
+                [filterable]="column.filterable"
+                [editable]="column.editable"
+                [width]="column.width"
+                [disableHiding]="column.disableHiding"
+                [draggable]="column.draggable"
+                [groupable]="column.groupable"
+                [visibleWhenCollapsed]="column.visibleWhenCollapsed"
+              >
+              </igx-column>
+            </ng-template>
+            <igx-action-strip #actionStrip>
+              <button igxButton="icon" igxRipple (click)="openReglementModal(ReglementModal, actionStrip.context)">
+                <i class="fa fa-bars" title="Details Opération"></i>
+              </button>
+              <button igxButton="icon" igxRipple (click)="genereRecu(actionStrip.context._data.Ope_Id)">
+                <i class="fa fa-file" title="Générer le reçu"></i>
+              </button>
+            </igx-action-strip>
+
+            <igx-paginator *ngIf="gridConfig.data?.length > 0" [perPage]="1000" [selectOptions]="[25, 100, 250, 500, 1000, 5000]" [displayDensity]="'compact'">
+              <igx-paginator-content>
+                <div class="col-lg-4"><igx-page-size></igx-page-size></div>
+                <div class="col-lg-4" [align]="'center'" *ngIf="gridComposantSection.totalRecords != undefined">{{ gridComposantSection.totalRecords }} lignes</div>
+                <div class="col-lg-4"><igx-page-nav></igx-page-nav></div>
+              </igx-paginator-content>
+            </igx-paginator>
+          </igx-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+<div class="container-fluid basic_table">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="table-container">
+          <ng-template #emptyGridTemplateGridComposantSection>
+            <div class="col-lg-12">
+              <p class="text-muted fs-5 text-center">
+                {{ gridConfig.emptyTemplateText != null && gridConfig.emptyTemplateText != "" ? gridConfig.emptyTemplateText : "Aucun élément trouvé" }}
+              </p>
+            </div>
+          </ng-template>
+          <igx-grid
+            #gridComposantSection
+            width="100%"
+            [height]="gridConfig.height"
+            [allowFiltering]="gridConfig.allowFiltering"
+            [data]="gridConfig.data"
+            [primaryKey]="gridConfig.primaryKey"
+            [emptyGridTemplate]="emptyGridTemplateGridComposantSection"
+            [rowEditable]="gridConfig.rowEditable"
+            [rowSelection]="'multiple'"
+            [cellSelection]="'none'"
+            [columnSelection]="'none'"
+            [displayDensity]="'compact'"
+            [rowHeight]="gridConfig.rowHeight"
+          >
+            
+
+            <igx-grid-toolbar>
+              <igx-grid-toolbar-actions>
+                <button type="button" class="igx-button igx-button--outlined ng-star-inserted" (click)="toggleSearchParams()">
+                  <i style="cursor: pointer" class="fa fa-filter fs-4" title="Afficher/masquer la barre de recherche"></i>
+                </button>
+                <igx-grid-toolbar-exporter *ngIf="gridConfig.data.length > 0" [exportExcel]="true" [exportCSV]="false" (exportStarted)="(gridConfig.ExportExcel)"></igx-grid-toolbar-exporter>
+                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+              </igx-grid-toolbar-actions>
+            </igx-grid-toolbar>
+
+            <ng-template ngFor let-column [ngForOf]="gridConfig.columns">
+              <igx-column
+                [cellClasses]="column.dataType == 'string' ? { 'justify-content-start': true } : column.dataType == 'number' ? { 'justify-content-end': true } : { 'justify-content-center': true }"
+                [header]="column.header"
+                [hidden]="!column.visible"
+                [dataType]="column.dataType"
+                [resizable]="column.resizable"
+                [field]="column.field"
+                [formatter]="column.formatter"
+                [sortable]="column.sortable"
+                [filterable]="column.filterable"
+                [editable]="column.editable"
+                [width]="column.width"
+                [disableHiding]="column.disableHiding"
+                [draggable]="column.draggable"
+                [groupable]="column.groupable"
+                [visibleWhenCollapsed]="column.visibleWhenCollapsed"
+              >
+              </igx-column>
+            </ng-template>
+            <igx-action-strip #actionStrip>
+              <button igxButton="icon" igxRipple (click)="openReglementModal(ReglementModal, actionStrip.context)">
+                <i class="fa fa-bars" title="Details Opération"></i>
+              </button>
+              <button igxButton="icon" igxRipple (click)="genereRecu(actionStrip.context._data.Ope_Id)">
+                <i class="fa fa-file" title="Générer le reçu"></i>
+              </button>
+            </igx-action-strip>
+            <igx-paginator *ngIf="gridConfig.data?.length > 0" [perPage]="1000" [selectOptions]="[25, 100, 250, 500, 1000, 5000]" [displayDensity]="'compact'">
+              <igx-paginator-content>
+                <div class="col-lg-4"><igx-page-size></igx-page-size></div>
+                <div class="col-lg-4" [align]="'center'" *ngIf="gridComposantSection.totalRecords != undefined">{{ gridComposantSection.totalRecords }} lignes</div>
+                <div class="col-lg-4"><igx-page-nav></igx-page-nav></div>
+              </igx-paginator-content>
+            </igx-paginator>
+          </igx-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #ReglementModal let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title" id="dialogueReglement">Détails des réglements</h2>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex flex-column">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Versement</th>
+              <th>Montant reglement</th>
+              <th>Remarque</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let reglement of selectedOperation.Reglements">
+              <td>{{ reglement.Vers_Nom }}</td>
+              <td>{{ reglement.Regl_Montant | number:'1.2-2'}} FCFA</td>
+              <td>{{ reglement.Regl_Remarque }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger " (click)="modal.dismiss()">Fermer</button>
+    <!-- <button type="button" class="btn btn-primary" (click)="onSubmit(modal)">Enregistrer</button> -->
+  </div>
+</ng-template>

@@ -1,0 +1,59 @@
+// CSS Reset, comment out if not required or using a different module
+@use "igniteui-angular/theming" as *;
+
+@import 'minireset.css/minireset';
+
+// Uncomment the following lines if you want to add a custom palette:
+// $primary: #731963 !default;
+// $secondary: #ce5712 !default;
+// $app-palette: palette($primary, $secondary, $surface);
+
+/* autoprefixer grid: on */
+
+$custom-palette: palette(
+  $primary: #766efb,
+  $secondary: #766efb,
+  $surface: #fff,
+  $gray: #fff
+);
+
+@include core();
+@include typography($font-family: $material-typeface, $type-scale: $material-type-scale);
+// @include theme($default-palette);
+@include theme($custom-palette);
+
+
+
+/* You can add global styles to this file, and also import other style files */
+@import "./assets/scss/app.scss";
+@import "ngx-toastr/toastr";
+
+@import "../node_modules/@swimlane/ngx-datatable/index.scss";
+@import "../node_modules/@swimlane/ngx-datatable/themes/bootstrap.scss";
+@import "../node_modules/@swimlane/ngx-datatable/themes/material.scss";
+@import "../node_modules/@swimlane/ngx-datatable/assets/icons.css";
+.router-wrapper {
+  position: relative;
+  overflow: hidden;
+  width: 100vw;
+  height: calc(100% - 47px);
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+:host {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #60d7a9;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

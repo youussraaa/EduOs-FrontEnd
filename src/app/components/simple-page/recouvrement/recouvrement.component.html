@@ -1,0 +1,175 @@
+<app-breadcrumb [title]="'Recouvrement'" active_item="recouvrement"></app-breadcrumb>
+
+<div *ngIf="showSearchParams" id="searchBar" class="card card-body border-0 px-0 px-lg-2 py-2" style="background-color: transparent">
+  <div class="col-12 pt-2 pb-0">
+    <form class="d-block d-lg-flex flex-lg-column justify-content-center col-12 px-xl-2 px-2 px-lg-0 px-xl-2">
+      <div class="row col-12 px-0 mx-0">
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-0 px-1">
+          <input type="search" [(ngModel)]="searchParams.Etd_Matricule" class="form-control" name="SrchEtd_Matricule" id="SrchEtd_Matricule" aria-describedby="helpId" placeholder="Matricule" />
+        </div>
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-2 px-1">
+          <input type="search" [(ngModel)]="searchParams.Etd_Nom" class="form-control" name="SrchEtd_Nom" id="SrchEtd_Nom" aria-describedby="helpId" placeholder="Nom" />
+        </div>
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-2 px-1">
+          <input type="search" [(ngModel)]="searchParams.Etd_Prenom" class="form-control" name="SrchEtd_Prenom" id="SrchEtd_Prenom" aria-describedby="helpId" placeholder="Prenom" />
+        </div>
+
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-2 px-1">
+          <select class="form-control" id="classe" [(ngModel)]="searchParams.Cls_Id" name="classe">
+            <option value="00000000-0000-0000-0000-000000000000">Classe</option>
+            <option *ngFor="let classe of Enums.Classes" [value]="classe.Cls_Id">{{ classe.Cls_Nom }}</option>
+          </select>
+        </div>
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-2 px-1">
+          <select class="form-control" id="niveau" [(ngModel)]="searchParams.Niv_Id" name="niveau">
+            <option value="00000000-0000-0000-0000-000000000000">Niveau</option>
+            <option *ngFor="let niveau of Enums.Niveaux" [value]="niveau.Niv_Id">{{ niveau.Niv_Nom }}</option>
+          </select>
+        </div>
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-2 px-1">
+          <select class="form-control" id="annee" [(ngModel)]="searchParams.Ann_Id" name="annee">
+            <option value="00000000-0000-0000-0000-000000000000">Année</option>
+            <option *ngFor="let annee of Enums.Annees" [value]="annee.Ann_Id">{{ annee.Ann_Nom }}</option>
+          </select>
+        </div>
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-2 px-1">
+          <select class="form-control" id="facturable" [(ngModel)]="searchParams.Fact_Id" name="facturable">
+            <option value="00000000-0000-0000-0000-000000000000">Facturable</option>
+            <option *ngFor="let facturable of Enums.Facturables" [value]="facturable.Fact_Id">{{ facturable.Fact_Nom }}</option>
+          </select>
+        </div>
+        <div class="form-group col-12 col-lg-2 mb-2 mb-lg-2 px-1 position-relative" title="Date prévu">
+          <input type="date" [(ngModel)]="searchParams.Vers_Dateprevu" class="form-control" name="SrchVers_Dateprevu" id="SrchVers_Dateprevu" aria-describedby="helpId" placeholder="Date prévu" />
+          <button
+            type="button"
+            style="padding-right: 0px; padding-left: 2px"
+            class="btn btn-sm btn-link position-absolute end-0 top-50 translate-middle-y me-5"
+            *ngIf="searchParams.Vers_Dateprevu"
+            (click)="searchParams.Vers_Dateprevu = null"
+          >
+            ✖
+          </button>
+        </div>
+
+        <!-- <div class="form-group col-12 col-lg-1 mb-2 ms-lg-2 px-1">
+          <button type="button" id="getDataBtn1" class="btn btn-info text-center" data-bs-toggle="tooltip" data-placement="bottom" [title]="'Rechercher'"
+            (click)="charger()">
+            Rechercher
+          </button>
+        </div>
+        <div class="form-group col-12 col-lg-2 mb-2 ms-lg-2 px-1">
+          <button type="button" id="getDataBtn2" class="btn btn-info text-center" data-bs-toggle="tooltip" data-placement="bottom" [title]="'Imprimer état récapitulatif'"
+            (click)="imprimer()">
+            Imprimer État récapitulatif
+          </button>
+        </div> -->
+        <div class="form-group col-auto mb-2 ms-lg-2 px-1">
+          <button type="button" id="getDataBtn1" class="btn btn-primary w-100 text-center" data-bs-toggle="tooltip" data-placement="bottom" [title]="'Rechercher'" (click)="charger()">Rechercher</button>
+        </div>
+
+        <!-- Bouton Imprimer -->
+        <div class="form-group col-auto mb-2 ms-lg-2 px-1">
+          <button type="button" id="getDataBtn2" class="btn btn-primary w-100 text-center" data-bs-toggle="tooltip" data-placement="bottom" [title]="'Imprimer état récapitulatif'" (click)="imprimer()">
+            Imprimer État récapitulatif
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="container-fluid basic_table">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="table-container">
+          <ng-template #emptyGridTemplateGridComposantSection>
+            <div class="col-lg-12">
+              <p class="text-muted fs-5 text-center">
+                {{ gridConfig.emptyTemplateText != null && gridConfig.emptyTemplateText != "" ? gridConfig.emptyTemplateText : "Aucun élément trouvé" }}
+              </p>
+            </div>
+          </ng-template>
+          <igx-grid
+            #gridComposantSection
+            width="100%"
+            [height]="gridConfig.height"
+            [allowFiltering]="gridConfig.allowFiltering"
+            [data]="gridConfig.data"
+            [primaryKey]="gridConfig.primaryKey"
+            [emptyGridTemplate]="emptyGridTemplateGridComposantSection"
+            [rowEditable]="gridConfig.rowEditable"
+            [rowSelection]="'multiple'"
+            [cellSelection]="'none'"
+            [columnSelection]="'none'"
+            [displayDensity]="'compact'"
+            [rowHeight]="gridConfig.rowHeight"
+            [groupingExpressions]="groupByExpression"
+            [groupsExpanded]="false"
+          >
+            <!-- [groupRowTemplate]="customGroupRowTemplate" -->
+            <ng-template #customGroupRowTemplate let-groupRow>
+              <div class="custom-group-row">
+                <strong>Élève :</strong> {{ groupRow.records[0]?.Etd_Nom }} {{ groupRow.records[0]?.Etd_Prenom }} ||
+                <!-- <strong>Élève :</strong> {{ getEtdNom(groupRow) }} {{ getEtdPrenom(groupRow.value) }} ||  -->
+                <!-- <strong>Tuteur :</strong> {{ getTutNomComplet(groupRow.value) }} {{ getTutTel(groupRow.value) }} -->
+              </div>
+            </ng-template>
+
+            <igx-grid-toolbar>
+              <igx-grid-toolbar-actions>
+                <button type="button" class="igx-button igx-button--outlined ng-star-inserted" (click)="toggleSearchParams()">
+                  <i style="cursor: pointer" class="fa fa-filter fs-4" title="Afficher/masquer la barre de recherche"></i>
+                </button>
+                <igx-grid-toolbar-exporter *ngIf="gridConfig.data.length > 0" [exportExcel]="true" [exportCSV]="false" (exportStarted)="(gridConfig.ExportExcel)"></igx-grid-toolbar-exporter>
+                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+              </igx-grid-toolbar-actions>
+            </igx-grid-toolbar>
+
+            <ng-template ngFor let-column [ngForOf]="gridConfig.columns">
+              <igx-column
+                [cellClasses]="column.dataType == 'string' ? { 'justify-content-start': true } : column.dataType == 'number' ? { 'justify-content-end': true } : { 'justify-content-center': true }"
+                [header]="column.header"
+                [hidden]="!column.visible"
+                [dataType]="column.dataType"
+                [resizable]="column.resizable"
+                [field]="column.field"
+                [formatter]="column.formatter"
+                [sortable]="column.sortable"
+                [filterable]="column.filterable"
+                [editable]="column.editable"
+                [width]="column.width"
+                [disableHiding]="column.disableHiding"
+                [draggable]="column.draggable"
+                [groupable]="column.groupable"
+                [visibleWhenCollapsed]="column.visibleWhenCollapsed"
+              >
+              </igx-column>
+            </ng-template>
+
+            <igx-paginator *ngIf="gridConfig.data?.length > 0" [perPage]="1000" [selectOptions]="[25, 100, 250, 500, 1000, 5000]" [displayDensity]="'compact'">
+              <igx-paginator-content>
+                <div class="col-lg-4"><igx-page-size></igx-page-size></div>
+                <div class="col-lg-4" [align]="'center'" *ngIf="gridComposantSection.totalRecords != undefined">{{ gridComposantSection.totalRecords }} lignes</div>
+                <div class="col-lg-4"><igx-page-nav></igx-page-nav></div>
+              </igx-paginator-content>
+            </igx-paginator>
+          </igx-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #newModal let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title" id="dialogueNewModal">New Modal</h2>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <p>Modal marche !</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.dismiss()">Fermer</button>
+    <!-- <button type="button" class="btn btn-primary" (click)="onSubmit(modal)">Enregistrer</button> -->
+  </div>
+</ng-template>

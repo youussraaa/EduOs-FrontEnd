@@ -1,0 +1,259 @@
+<app-breadcrumb [title]="'Enseignants'"></app-breadcrumb>
+<div class="container-fluid basic_table">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <!-- Etape 5 - Renseignez vos enseignants -->
+            <h3></h3>
+            <button class="btn btn-primary" type="button" title="Ajouter Enseignant"  (click)="openAddModal(addModalContent)"><i class="fa fa-plus"></i></button>
+          </div>
+        </div>
+
+        <!-- Tableau des candidats -->
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Photo</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Sexe</th>
+                <th>CIN</th>
+                <th>Date de naissance</th>
+                <th>Lieu de naissance</th>
+                <th>Adresse</th>
+                <th>Téléphone</th>
+                <th>Date de recrutement</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="Enseignants == null || Enseignants.length == 0">
+                <th colspan="11"><i>Aucun enseignant</i></th>
+              </tr>
+
+              <tr *ngFor="let enseignant of Enseignants; let i = index">
+                <td><img src="../../../../assets/images/user/user.png" alt="Photo" class="img" width="50" /></td>
+                <td>{{ enseignant.Ens_Nom }}</td>
+                <td>{{ enseignant.Ens_Prenom }}</td>
+                <td>{{ enseignant.Sex_Nom }}</td>
+                <td>{{ enseignant.Ens_CIN }}</td>
+                <td>{{ enseignant.Ens_DateNaissance | date : "dd/MM/yyyy" }}</td>
+                <td>{{ enseignant.Ens_LieuNaissance }}</td>
+                <td>{{ enseignant.Ens_Adresse }}</td>
+                <td>{{ enseignant.Ens_Tel }}</td>
+                <td>{{ enseignant.Ens_DateRecrutement | date : "dd/MM/yyyy" }}</td>
+
+                <td>
+                  <a class="text-warning fs-5 mx-2 point-cursor" title="Modifier Enseignant" (click)="openEditModalEnseignant(editModalContentGet, enseignant)">
+                    <i class="fa fa-edit"></i>
+                  </a>
+                  <a class="text-danger fs-5 mx-2 point-cursor" title="Supprimer Enseignant" (click)="deleteEnseignant(i)">
+                    <i class="fa fa-trash"></i>
+                  </a>
+                  <!-- <button class="btn btn-warning btn-sm" ><i class="fa fa-edit"></i></button> -->
+                  <!-- <button class="btn btn-danger btn-sm ms-2" >-</button> -->
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer text-end">
+          <button class="btn btn-primary me-3" type="submit" routerLink="../fiches">Retour</button>
+          <button class="btn btn-success" type="submit" routerLink="../enseignants-matiere">Continuer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="fs-4">
+              Liste des étudiants <a title="Filtrer" (click)="showHistory()"><i class="fa fa-filter fs-3" style="cursor: pointer"></i> </a>
+            </h5>
+            <button class="btn btn-primary" type="button" (click)="openAddModal(addModalContent)"><i class="fa fa-plus"></i></button>
+
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Photo</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Date de naissance</th>
+                <th>Lieu de naissance</th>
+                <th>Adresse</th>
+                <th>Téléphone</th>
+                <th>Niveau</th>
+                <th>Classe</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let student of filteredStudents; let i = index">
+                <td><img [src]="student.photo" alt="Photo" class="img-thumbnail" width="50" /></td>
+                <td>{{ student.nom }}</td>
+                <td>{{ student.prenom }}</td>
+                <td>{{ student.dateNaissance }}</td>
+                <td>{{ student.lieuNaissance }}</td>
+                <td>{{ student.adresse }}</td>
+                <td>{{ student.tel }}</td>
+                <td>{{ student.niveau }}</td>
+                <td>{{ student.classe }}</td>
+
+                <td>
+                  <a class="text-warning fs-4 mx-2 point-cursor" (click)="openEditModal(editModalContent, student)">
+                    <i class="fa fa-edit"></i>
+                  </a>
+                  <a class="text-danger fs-4 mx-2 point-cursor" (click)="deleteStudent(i)">
+                    <i class="fa fa-trash"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div> -->
+</div>
+<div class="container-fluid basic_table">
+  <!-- Modal pour Modifier l'étudiantGet -->
+  <ng-template #editModalContentGet let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title fs-4" id="dialogueenseignantget">Modifier Enseignant</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="addNom" class="form-label">Nom</label>
+            <input type="text" id="addNom" class="form-control" [(ngModel)]="selectedEnseignant.Ens_Nom" name="addNom" />
+          </div>
+          <div class="col">
+            <label for="addPrenom" class="form-label">Prénom</label>
+            <input type="text" id="addPrenom" class="form-control" [(ngModel)]="selectedEnseignant.Ens_Prenom" name="addPrenom" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="addMatricule" class="form-label">Date de recrutement</label>
+            <input type="date" id="addMatricule" class="form-control" [(ngModel)]="selectedEnseignant.Ens_DateRecrutement" name="addMatricule" />
+          </div>
+          <div class="col">
+            <label for="sexe">Sexe :</label>
+            <select class="form-control" id="sexe" [(ngModel)]="selectedTypeSexe" name="typeSexe">
+              <option *ngFor="let typeSexe of TypeSexeList" [value]="typeSexe.key">{{ typeSexe.libelle }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="addDateNaissance" class="form-label">Date de naissance</label>
+            <input type="date" id="addDateNaissance" class="form-control" [(ngModel)]="selectedEnseignant.Ens_DateNaissance" name="addDateNaissance" />
+          </div>
+          <div class="col">
+            <label for="addLieuNaissance" class="form-label">Lieu de naissance</label>
+            <input type="text" id="addLieuNaissance" class="form-control" [(ngModel)]="selectedEnseignant.Ens_LieuNaissance" name="addLieuNaissance" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="addCIN" class="form-label">CIN</label>
+            <input type="text" id="addCIN" class="form-control" [(ngModel)]="selectedEnseignant.Ens_CIN" name="addCIN" />
+          </div>
+          <div class="col">
+            <label for="addEmail" class="form-label">Téléphone</label>
+            <input type="text" id="addEmail" class="form-control" [(ngModel)]="selectedEnseignant.Ens_Tel" name="addEmail" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="addAdresse" class="form-label">Adresse</label>
+            <input type="text" id="addAdresse" class="form-control" [(ngModel)]="selectedEnseignant.Ens_Adresse" name="addAdresse" />
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annuler</button>
+      <button type="button" class="btn btn-primary" (click)="editEnseignant()">Enregistrer</button>
+    </div>
+  </ng-template>
+
+  <!-- Modal pour Ajouter un enseignant -->
+  <ng-template #addModalContent let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title fs-4" id="dialogueAddEtudiant">Ajouter Enseignant</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="addNom" class="form-label">Nom</label>
+            <input type="text" id="addNom" class="form-control" [(ngModel)]="newEnseignant.Ens_Nom" name="addNom" />
+          </div>
+          <div class="col">
+            <label for="addPrenom" class="form-label">Prénom</label>
+            <input type="text" id="addPrenom" class="form-control" [(ngModel)]="newEnseignant.Ens_Prenom" name="addPrenom" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="addRecrute" class="form-label">Date de recrutement</label>
+            <input type="date" id="addRecrute" class="form-control" [(ngModel)]="newEnseignant.Ens_DateRecrutement" name="addRecrute" />
+          </div>
+          <div class="col">
+            <label for="sexe">Sexe :</label>
+            <select class="form-control" id="sexe" [(ngModel)]="selectedTypeSexe" name="typeSexe">
+              <option *ngFor="let typeSexe of TypeSexeList" [value]="typeSexe.key">{{ typeSexe.libelle }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="addDateNaissance" class="form-label">Date de naissance</label>
+            <input type="date" id="addDateNaissance" class="form-control" [(ngModel)]="newEnseignant.Ens_DateNaissance" name="addDateNaissance" />
+          </div>
+          <div class="col">
+            <label for="addLieuNaissance" class="form-label">Lieu de naissance</label>
+            <input type="text" id="addLieuNaissance" class="form-control" [(ngModel)]="newEnseignant.Ens_LieuNaissance" name="addLieuNaissance" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="addCIN" class="form-label">CIN</label>
+            <input type="text" id="addCIN" class="form-control" [(ngModel)]="newEnseignant.Ens_CIN" name="addCIN" />
+          </div>
+          <div class="col">
+            <label for="addTel" class="form-label">Téléphone</label>
+            <input type="text" id="addTel" class="form-control" [(ngModel)]="newEnseignant.Ens_Tel" name="addTel" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="addAdresse" class="form-label">Adresse</label>
+            <input type="text" id="addAdresse" class="form-control" [(ngModel)]="newEnseignant.Ens_Adresse" name="addAdresse" />
+          </div>
+          <div class="col">
+            <label for="photoUpload">Photo : </label>
+            <input type="file" (change)="onImageSelected($event)" id="photoUpload" accept="image/*" name="photoEnseignant" />
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annuler</button>
+      <button type="button" class="btn btn-primary" (click)="addNewEnseignant()">Ajouter</button>
+    </div>
+  </ng-template>
+</div>
