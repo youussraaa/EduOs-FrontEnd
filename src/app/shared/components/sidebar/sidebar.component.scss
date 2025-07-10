@@ -7,7 +7,7 @@ svg-icon {
     fill: orange;
   }
 }
-.logo-wrapper, .sidebar-main{
+.logo-wrapper, .sidebar-main, .logo-icon-wrapper{
   background: linear-gradient(to right, #7366ff, #33B1EE);
 }
 
@@ -24,4 +24,27 @@ svg-icon {
 }
 .badge{
   color: white;
+}
+.sidebar-toggle, .fa-angle-left, .left-arrow, .fa-angle-right, .pull-right{
+  filter: brightness(100) saturate(100%) sepia(90%) saturate(600%) hue-rotate(180deg);
+}
+.sidebar-title{
+  font-size: medium;
+}
+.link-nav{
+  border-radius: 50px;
+}
+.sidebar-title, .sidebar-submenu, .submenu-title{
+  color: #ffffff;
+  background: transparent;
+  transition: all 0.3s ease;
+  filter: brightness(100) saturate(100%);
+}
+.sidebar-title.active, .submenu-title.active{
+  filter: saturate(100%);
+  color: linear-gradient(to right, #7366ff, #33B1EE);
+}
+.sidebar-title:hover,
+.submenu-title:hover {
+  filter: brightness(100) saturate(100%);
 }

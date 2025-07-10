@@ -1,3 +1,34 @@
 .point-cursor {
   cursor: pointer;
 }
+.card{
+    margin-left: 20px;
+    margin-right: 20px;
+    border: none;
+    .table-responsive {
+    display: flex;
+    justify-content: center;
+    background: linear-gradient(to left, #7366ff, #33B1EE);
+    border: none;
+
+    table.table{
+      width: 95%;               // Adjust this as needed (e.g. 60%, 800px, etc.)
+      margin: 0;
+      border-collapse: collapse;
+      border-radius: 8px;
+      padding: 0;
+      background: white;
+    }
+  }
+}
+.card-header, .card-footer{
+    background: linear-gradient(to left, #7366ff, #33B1EE);
+    border: none;
+}
+td, th{
+  border: none;
+}
+.btn-success, .btn-secondary, .btn-primary{
+    border-radius: 50px;
+    border-color: white;
+}

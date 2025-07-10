@@ -18,13 +18,31 @@ html, body {
   }
   .card{
     margin-top: 30px;
+    background: linear-gradient(to left, #7366ff, #33B1EE);
+    table.table{
+      width: 95%;               // Adjust this as needed (e.g. 60%, 800px, etc.)
+      margin: 0;
+      border-radius: 8px;
+      padding: 0;
+      background: white;
+    }
+    .table-responsive {
+    display: flex;
+    justify-content: center;
+    background: linear-gradient(to left, #7366ff, #33B1EE);
+    border: none;
+    border-radius: 8px;
+    }
+.card-header, .card-footer{
+    background: linear-gradient(to left, #7366ff, #33B1EE);
+    border: none;
+}
   }
   
- 
-  
-  thead {
-    position: sticky;
-    top: -30px;
-    background-color: white;
-    z-index: 100;
-  }
+td, th{
+  border: none;
+}
+.btn-success, .btn-secondary, .btn-primary{
+    border-radius: 50px;
+    border-color: white;
+}

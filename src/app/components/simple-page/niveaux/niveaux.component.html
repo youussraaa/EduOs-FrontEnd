@@ -106,7 +106,7 @@
     <div class="card student-list-card m-2">
       <div class="card-header p-2">
         <div class="d-flex justify-content-between align-items-center">
-          <h4 class="fs-4">{{ gridConfig.title }} {{ gridConfig.data != null && gridConfig.data.length > 0 ? '(' + gridConfig.data.length + ')' : '' }}</h4>
+          <h3>{{ gridConfig.title }} {{ gridConfig.data != null && gridConfig.data.length > 0 ? '(' + gridConfig.data.length + ')' : '' }}</h3>
           <!-- <input type="text" [style.width]="'50%'" class="form-control" (change)="OnFiltreChange($event,'null')" (keyup)="OnFiltreChange($event,'null')" [(ngModel)]="filterParams.global" placeholder="Filtre" /> -->
   
           <div class="d-flex gap-2">
@@ -206,11 +206,11 @@
   <div class="modal-body">
     <div class="form-group">
       <label for="levelName">Nom du Niveau</label>
-      <input type="text" class="form-control" [(ngModel)]="newLevel.Niv_Nom" placeholder="Niveau" />
+      <input type="text" class="form-control" [(ngModel)]="newLevel.Niv_Nom" placeholder="Niveau" /><br>
     </div>
     <div class="form-group">
       <label for="numberOfClasses">Nombre de Classes</label>
-      <input type="number" class="form-control" [(ngModel)]="newLevel.NombreClasses" placeholder="Nombre de Classes" />
+      <input type="number" class="form-control" [(ngModel)]="newLevel.NombreClasses" placeholder="Nombre de Classes" /><br>
     </div>
     <div class="form-group">
       <label for="description">Description</label>

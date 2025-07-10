@@ -1,5 +1,28 @@
 .card{
   margin-top: 30px;
+  background: linear-gradient(to left, #7366ff, #33B1EE);
+  table.table{
+      width: 95%;               // Adjust this as needed (e.g. 60%, 800px, etc.)
+      margin: 0;
+      border-collapse: collapse;
+      border-radius: 8px;
+      padding: 0;
+      background: white;
+    }
+}
+td, th{
+  border: none;
+}
+.card-header{
+  background: linear-gradient(to left, #7366ff, #33B1EE);
+}
+.fs-4{
+  color: white;
+}
+.btn-outline-primary, .igx-button--outlined{
+  background: transparent;
+  color: white;
+  border: white;
 }
 
 html, body {
@@ -14,9 +37,22 @@ html, body {
   display: flex;
   flex-direction: column;
 }
+.btn-success{
+  border-radius: 50px;
+}
+.modal-title, .modal-body{
+  color: black;
+  font-size: medium;
+}
+.modal-title{
+  font-size: x-large;
+}
 
 #infoCard {
   flex-grow: 1; /* Permet à la carte d'occuper tout l'espace disponible */
   min-height: 200px; /* Pour éviter qu'elle disparaisse si la fenêtre est trop petite */
   overflow-y: auto; /* Ajoute un scroll si nécessaire */
+}
+h3{
+  color: white;
 }
