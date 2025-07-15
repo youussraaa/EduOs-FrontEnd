@@ -1,5 +1,6 @@
 .container-fluid {
-  padding: 20px;
+  padding: 0;
+  margin: 0;
 }
 
 .filter-card {
@@ -77,6 +78,56 @@
 
 /* Pour s'assurer que le défilement ne dépasse pas les limites */
 .table-responsive {
-  // max-height: 520px; /* Ajustez selon la hauteur souhaitée */
-  overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    background: linear-gradient(to left, #7366ff, #33B1EE);
+    border: none;
+    border-radius: 8px;
+}
+.card{
+  margin-top: 10px;
+  background: linear-gradient(to left, #7366ff, #33B1EE);
+  table.table{
+      width: 100%;               // Adjust this as needed (e.g. 60%, 800px, etc.)
+      margin: 0;
+      border-collapse: collapse;
+      border-radius: 8px;
+      padding: 0;
+      background: white;
+    }
+}
+.card-header{
+  background: linear-gradient(to left, #7366ff, #33B1EE);
+}
+.fs-4{
+  color: white;
+}
+.btn-primary{
+  background-color: transparent !important;
+  color: white;
+  border: white;
+} 
+td, th{
+  border: none;
+}
+.table-responsive {
+    display: flex;
+    justify-content: center;
+    background: linear-gradient(to left, #7366ff, #33B1EE);
+    border: none;
+    border-radius: 8px;
+}
+.nav-link{
+  color: white;
+}
+#searchBar{
+  display: grid;
+  grid-template-columns: repeat(4, 1600px);  /* 3 equal columns */
+  gap: 20px;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+}
+.card-body{
+  margin-top: 10px;
 }
