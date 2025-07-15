@@ -15,6 +15,7 @@ export class MyAccountComponent implements OnInit {
 
   user: keycloakUser;
   version: string = null;
+  menuOpen = false; /*isProfileClicked => add function below*/
 
   constructor(public router: Router, private authService: AuthService) {
     this.version = environment.version;
@@ -38,4 +39,17 @@ export class MyAccountComponent implements OnInit {
   userProfile() {
     window.open(`${environment.keycloak.serverUrl}/realms/${environment.keycloak.realm}/account/#/personal-info`, "_blank");
   }
+toggleMenu() {
+  this.menuOpen = !this.menuOpen;
 }
+
+onClickOutside(event: MouseEvent) {
+  console.log('clicked')
+  const target = event.target as HTMLElement;
+  if (!target.closest('.profile')) {
+    this.menuOpen = true;
+  }
+}
+
+}
+

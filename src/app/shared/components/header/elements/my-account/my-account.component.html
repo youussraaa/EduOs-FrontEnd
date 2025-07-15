@@ -3,14 +3,14 @@
   <!-- <div class="media-body"><span>{{ user?.FullName }}</span>
     <p class="mb-0 font-roboto">Admin <i class="middle fa fa-angle-down"></i></p>
   </div> -->
-  <div class="media-body">
-    <span>{{ user?.FullName }}</span> &nbsp;<i class="middle fa fa-angle-down"></i>
+  <div (click)="onClickOutside($event)" class="media-body">
+    <svg   xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> &nbsp;<i class="middle fa fa-angle-down"></i>
     <!-- <p class="mb-0 font-roboto">Admin </p> -->
   </div>
 </div>
-<ul class="profile-dropdown onhover-show-div" style="width: max-content;">
+<ul class="profile-dropdown onhover-show-div" *ngIf="menuOpen" style="width: max-content;">
   <li>
-    <a href="javascript:void(0)"><app-feather-icons [icon]="'user'"></app-feather-icons><span>Compte</span></a>
+    <a href="javascript:void(0)"><app-feather-icons [icon]="'user'"></app-feather-icons><span>{{ user?.FullName }}</span></a>
   </li>
   <!-- <li><a href="javascript:void(0)"><app-feather-icons [icon]="'mail'"></app-feather-icons><span>Inbox</span></a></li> -->
   <!-- <li><a href="javascript:void(0)"><app-feather-icons [icon]="'file-text'"></app-feather-icons><span>Taskboard</span></a></li> -->

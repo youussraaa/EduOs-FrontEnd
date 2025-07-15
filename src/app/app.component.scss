@@ -2,3 +2,17 @@
 igc-trial-watermark {
     display: none !important;
   }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.main-wrapper {
+  height: 100%;
+  min-height: 100vh;
+  background-image: url('/assets/images/imgg.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
