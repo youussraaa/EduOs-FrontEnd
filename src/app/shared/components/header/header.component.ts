@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from "@angular/core";
+import { Component, OnInit, Inject, HostListener } from "@angular/core";
 import { DOCUMENT } from "@angular/common";
 import { NavService } from "../../services/nav.service";
 import { LayoutService } from "../../services/layout.service";
@@ -10,6 +10,7 @@ import { AuthService } from "../../services/auth.service";
 import { NgxSpinnerService } from "ngx-spinner";
 
 SwiperCore.use([Navigation, Pagination, Autoplay]);
+
 @Component({
   selector: "app-header",
   templateUrl: "./header.component.html",
@@ -21,6 +22,7 @@ export class HeaderComponent implements OnInit {
   currentAnnee: any = null;
   Annees: any[] = [];
   canViewDashboard: boolean = false;
+  dropdownOpen = false;
 
   constructor(
     public layout: LayoutService,
@@ -36,16 +38,13 @@ export class HeaderComponent implements OnInit {
       this.canViewDashboard = true;
       console.log("topManagement !!!")
     }
-
     this.appService.anneeEmitter.subscribe(item => this.currentAnnee = item)
-
     this.eduosService.GetAnnees()
       .subscribe((response) => {
         console.log("response GetAnnees: ", response)
         this.Annees = response.sort((a, b) => b.Ann_Nom.localeCompare(a.Ann_Nom));
         this.currentAnnee = response.find(x => x.Ann_Encours == true);
-
-        // setTimeout(() => {
+        
         if (localStorage.getItem("selectedAnnee") != null) {
           let selectedAnnee = response.find(x => x.Ann_Id == localStorage.getItem("selectedAnnee"))
           if (selectedAnnee != null) this.appService.anneeEmitter.emit(selectedAnnee);
@@ -57,21 +56,34 @@ export class HeaderComponent implements OnInit {
           let currentAnnee = response.find(x => x.Ann_Encours);
           if (currentAnnee != null) this.appService.anneeEmitter.emit(currentAnnee);
         }
-
       }, (error) => {
         console.error("Erreur getAnnees: ", error)
       })
   }
+
+  toggleDropdown(event: MouseEvent) {
+    event.stopPropagation();
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+
+  closeDropdown() {
+    this.dropdownOpen = false;
+  }
+
   ChangeAnnee(ann_id: string) {
-    // this.loader.show();
     let annee = this.Annees.find(x => x.Ann_Id == ann_id);
     this.appService.anneeEmitter.emit(annee);
     localStorage.setItem("selectedAnnee", annee.Ann_Id);
-    // this.toastr.info("Année modifiée");
-    // petit délai pour laisser le spinner s'afficher
-    // setTimeout(() => {
-    //   this.document.location.reload();            // ← full page reload
-    // }, 100);
+    this.closeDropdown(); // Close dropdown after selection
+  }
+
+  // Add @HostListener decorator to listen for document clicks
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.profile-nav')) {
+      this.dropdownOpen = false;
+    }
   }
 
   ngOnInit() {

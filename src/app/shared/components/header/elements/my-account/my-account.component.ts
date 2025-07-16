@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { keycloakUser } from "../../../model/dto.model";
 import { AuthService } from "../../../../../shared/services/auth.service";
@@ -14,7 +14,7 @@ export class MyAccountComponent implements OnInit {
   public profileImg: "assets/images/dashboard/profile.jpg";
 
   user: keycloakUser;
-  version: string = null;
+  version: string;
   menuOpen = false; /*isProfileClicked => add function below*/
 
   constructor(public router: Router, private authService: AuthService) {
@@ -35,21 +35,25 @@ export class MyAccountComponent implements OnInit {
   logoutFunc() {
     localStorage.clear()
     this.authService.Logout();
+    this.menuOpen = false;
   }
   userProfile() {
     window.open(`${environment.keycloak.serverUrl}/realms/${environment.keycloak.realm}/account/#/personal-info`, "_blank");
+    this.menuOpen = false; // Close menu after opening profile
   }
-toggleMenu() {
-  this.menuOpen = !this.menuOpen;
-}
+  toggleMenu(event: MouseEvent) {
+    event.stopPropagation(); // Prevent event bubbling
+    this.menuOpen = !this.menuOpen;
+  }
 
-onClickOutside(event: MouseEvent) {
-  console.log('clicked')
-  const target = event.target as HTMLElement;
-  if (!target.closest('.profile')) {
-    this.menuOpen = true;
-  }
-}
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent) {
+    console.log('clicked outside');
+    const target = event.target as HTMLElement;
+    if (!target.closest('.profile')) {
+      this.menuOpen = false; // Close menu when clicking outside
+    }
+  }
 
 }
 

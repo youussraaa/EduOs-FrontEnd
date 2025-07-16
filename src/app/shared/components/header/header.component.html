@@ -21,24 +21,9 @@
         <!-- <li class="language-nav" (click)="languageToggle()">
           <app-languages></app-languages>
         </li> -->
-        <li>
-          <span class="header-search" (click)="searchToggle()">
-            <svg>
-              <use href="assets/svg/icon-sprite.svg#search"></use>
-            </svg>
-          </span>
-        </li>
 
-        <li class="onhover-dropdown">
+        <li>
           <app-bookmark></app-bookmark>
-        </li>
-
-        <li>
-          <div class="mode" (click)="layoutToggle()">
-            <svg>
-              <use href="assets/svg/icon-sprite.svg#moon"></use>
-            </svg>
-          </div>
         </li>
         <li class="cart-nav ">
           <app-cart></app-cart>
@@ -49,7 +34,7 @@
         </li> -->
 
         <li class="profile-nav  p-0">
-          <div class="media profile-media">
+          <div class="media profile-media" (click)="toggleDropdown($event)">
             <!-- <img class="b-r-10" src="assets/images/dashboard/profile.png" alt="" /> -->
             <!-- <div class="media-body"><span>{{ user?.FullName }}</span>
               <p class="mb-0 font-roboto">Admin <i class="middle fa fa-angle-down"></i></p>
@@ -58,8 +43,8 @@
               <span>{{ currentAnnee?.Ann_Nom }}</span>
             </div>
           </div>
-          <ul class="profile-dropdown  " style="width: max-content;">
-            <li *ngFor="let ann of Annees" (click)="ChangeAnnee(ann.Ann_Id);"><span>{{ ann.Ann_Nom }}</span></li>
+          <ul class="profile-dropdown" [@dropdownAnimation]="dropdownOpen ? 'open' : 'closed'" *ngIf="dropdownOpen" style="width: max-content;">
+            <li *ngFor="let ann of Annees" (click)="ChangeAnnee(ann.Ann_Id)"><span>{{ ann.Ann_Nom }}</span></li>
           </ul>
         </li>
 

@@ -2,180 +2,116 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 
-<div class="container-fluid" *ngIf="canViewDashboard == true">
-  <div class="card profile-box card-d">
-    <div class="card-body cardy">
-      <div class="media">
-        <div class="media-body">
-          <div class="greeting-user">
-            <h4 class="f-w-600 fs-4 figtree-font1">Bienvenue à EDU-OS</h4>
-            <div routerLink="/public/candidature" class="whatsnew-btn" target="_blank"><a class="btn btn-outline-white figtree-font2">Formulaire des candidats !</a></div>
-          </div>
-        </div>
-
-        <div class="cloud">
-          <img class="img-fluid" src="assets/images/dashboard/cloud.png" />
-        </div>
-
-        <div>
-          <div class="clockbox">
-            <svg id="clock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
-              <g id="face">
-                <circle class="circle" cx="300" cy="300" r="253.9"></circle>
-                <path
-                  class="hour-marks"
-                  d="M300.5 94V61M506 300.5h32M300.5 506v33M94 300.5H60M411.3 107.8l7.9-13.8M493 190.2l13-7.4M492.1 411.4l16.5 9.5M411 492.3l8.9 15.3M189 492.3l-9.2 15.9M107.7 411L93 419.5M107.5 189.3l-17.1-9.9M188.1 108.2l-9-15.6"
-                ></path>
-                <circle class="mid-circle" cx="300" cy="300" r="16.2"></circle>
-              </g>
-              <g id="hour">
-                <path class="hour-hand" d="M300.5 298V142"></path>
-                <circle class="sizing-box" cx="300" cy="300" r="253.9"></circle>
-              </g>
-              <g id="minute">
-                <path class="minute-hand" d="M300.5 298V67"></path>
-                <circle class="sizing-box" cx="300" cy="300" r="253.9"></circle>
-              </g>
-              <g id="second">
-                <path class="second-hand" d="M300.5 350V55"></path>
-                <circle class="sizing-box" cx="300" cy="300" r="253.9"></circle>
-              </g>
-            </svg>
-          </div>
-          <div class="badge f-10 p-0" id="txt"></div>
+<div class="dashboard-container" *ngIf="canViewDashboard == true">
+  <div class="dashboard-grid">
+    <!-- Main Overview Card -->
+    <div class="main-card">
+      <div class="card-header">
+        <h2 class="card-title">Vue d'ensemble</h2>
+        <select class="period-selector">
+          <option>Mensuel</option>
+          <option>Hebdomadaire</option>
+          <option>Annuel</option>
+        </select>
+      </div>
+      
+      <div class="chart-container">
+        <div class="wave-line"></div>
+        <div class="data-point"></div>
+        <div class="data-label">
+          {{ Statistique?.NbCandidatures || 0 }}<br>
+          <small>Candidatures</small>
         </div>
       </div>
-      <div class="cartoon"><img class="img-fluid" src="assets/images/dashboard/cartoon.svg" alt="vector women with leptop" /></div>
+      
+      <div class="month-labels">
+        <span class="month-label">Jan</span>
+        <span class="month-label">Fév</span>
+        <span class="month-label">Mar</span>
+        <span class="month-label active">Avr</span>
+        <span class="month-label">Mai</span>
+        <span class="month-label">Jun</span>
+        <span class="month-label">Jul</span>
+        <span class="month-label">Aoû</span>
+        <span class="month-label">Sep</span>
+        <span class="month-label">Oct</span>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-label">Total Candidatures</div>
+          <h3 class="stat-value">{{ Statistique?.NbCandidatures || 0 }}</h3>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Total Élèves</div>
+          <h3 class="stat-value">{{ Statistique?.NbEtudiants || 0 }}</h3>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Objectif</div>
+          <h3 class="stat-value">{{ (Statistique?.NbCandidatures || 0) + 50 }}</h3>
+        </div>
+      </div>
+    </div>
+
+<div class="dashboard-cards">
+  <!-- Action Card -->
+  
+    <a routerLink="/public/candidature" class="action-card" target="_blank">
+      <div class="action-card-content">
+        <div class="action-icon">
+          <i class="fa fa-plus"></i>
+        </div>
+        <div class="action-title">Nouvelle Candidature</div>
+        <div class="action-subtitle">Formulaire des candidats</div>
+      </div>
+    </a>
+  
+
+  <!-- Payments Card -->
+  <div class="compact-card-p payments" [routerLink]="'/paiements'">
+    <div class="compact-content">
+      <div class="compact-icon">
+        <i class="fa fa-money"></i>
+      </div>
+      <div class="compact-title">Total Paiements</div>
+      <h3 class="compact-value">
+        {{ (Statistique?.TotalPaiements | number : "1.0-0") || 0 }} 
+        <span class="stat-unit">FCFA</span>
+      </h3>
     </div>
   </div>
+</div>
+</div>
+    <!-- Side Cards -->
+    <div class="fox">
 
-  <div class="row">
-    <div class="col-sm-6">
-      <div class="card shadow-lg border-0 widget-hover">
-        <div class="card-body card-candidats" [routerLink]="'/liste-candidats'">
-          <div class="d-flex align-items-center mb-3">
-            <i class="fa fa-list fs-1 text-primary"></i>
-            <h3 class="card-title fs-3 ms-3 mb-0 figtree-font2"><strong>Nombre de candidatures</strong></h3>
+    
+        <div class="compact-card students" [routerLink]="'/liste-etudiants'">
+        <div class="compact-content">
+          <div class="compact-icon">
+            <i class="fa fa-users"></i>
           </div>
-          <p class="card-text fs-4 text-center fw-bold">{{ Statistique?.NbCandidatures }}</p>
+          <div class="compact-title">Mes Élèves</div>
+          <h3 class="compact-value">{{ Statistique?.NbEtudiants || 0 }}</h3>
         </div>
       </div>
-    </div>
-
-    <!-- Total des étudiants -->
-    <div class="col-sm-6">
-      <div class="card shadow-lg border-0 widget-hover">
-        <div class="card-body card-eleves" [routerLink]="'/liste-etudiants'">
-          <div class="d-flex align-items-center mb-3">
-            <i class="fa fa-users fs-1 text-primary"></i>
-            <h3 class="card-title fs-3 ms-3 mb-0 figtree-font2"><strong>Total des élèves</strong></h3>
-          </div>
-          <p class="card-text fs-4 text-center fw-bold figtree-font2">{{ Statistique?.NbEtudiants }}</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Nombre d'enseignants -->
-    <div class="col-sm-6">
-      <div class="card shadow-lg border-0 widget-hover">
-        <div class="card-body card-enseignants" [routerLink]="'/enseignants'">
-          <div class="d-flex align-items-center mb-3">
-            <i class="fa fa-briefcase fs-1 text-success"></i>
-            <h3 class="card-title fs-3 ms-3 mb-0 figtree-font2"><strong>Total des enseignants</strong></h3>
-          </div>
-          <p class="card-text fs-4 text-center fw-bold figtree-font2">{{ Statistique?.NbEnseignants }}</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Total des paiements -->
-    <div class="col-sm-6">
-      <div class="card shadow-lg border-0 widget-hover">
-        <div class="card-body card-paiements" [routerLink]="'/paiements'">
-          <div class="d-flex align-items-center mb-3">
-            <i class="fa fa-money fs-1 text-warning"></i>
-            <h3 class="card-title fs-3 ms-3 mb-0 figtree-font2"><strong>Total des paiements</strong></h3>
-          </div>
-          <p class="card-text fs-4 text-center fw-bold figtree-font2">{{ Statistique?.TotalPaiements | number : "1.2-2" }} FCFA</p>
-        </div>
-      </div>
-    </div>
-
-
-
-
-    <div class="row">
-      <!-- <div class="col-xl-6 col-lg-6" [routerLink]="'/liste-candidats'">
-        <div class="card l-bg-red-dark widget-hover">
-          <div class="card-statistic-3 p-4">
-            <div class="card-icon card-icon-large"><i class="fa fa-users"></i></div>
-            <div class="mb-4">
-              <h5 class="card-title mb-0">Nombre de candidatures</h5>
-            </div>
-            <div class="row align-items-center mb-2 d-flex">
-              <div class="col-8">
-                <h2 class="d-flex align-items-center mb-0">{{ Statistique?.NbCandidatures }}</h2>
-              </div>
-            </div>
-           
-          </div>
-        </div>
-      </div>
-      <div class="col-xl-6 col-lg-6" [routerLink]="'/liste-etudiants'">
-        <div class="card l-bg-orange widget-hover">
-          <div class="card-statistic-3 p-4">
-            <div class="card-icon card-icon-large"><i class="fa fa-users"></i></div>
-            <div class="mb-4">
-              <h5 class="card-title">Total des élèves</h5>
-            </div>
-            <div class="row align-items-center mb-2 d-flex">
-              <div class="col-8">
-                <h2 class="d-flex align-items-center mb-0">{{ Statistique?.NbEtudiants }}</h2>
-              </div>
-            </div>
-           
-          </div>
-        </div>
-      </div>
-      <div class="col-xl-6 col-lg-6" [routerLink]="'/enseignants'">
-        <div class="card l-bg-coral widget-hover">
-          <div class="card-statistic-3 p-4">
-            <div class="card-icon card-icon-large"><i class="fa fa-briefcase"></i></div>
-            <div class="mb-4">
-              <h5 class="card-title mb-0">Total des enseignants</h5>
-            </div>
-            <div class="row align-items-center mb-2 d-flex">
-              <div class="col-8">
-                <h2 class="d-flex align-items-center mb-0">{{ Statistique?.NbEnseignants }}</h2>
-              </div>
-            </div>
-            
-          </div>
-        </div>
-      </div>
-      <div class="col-xl-6 col-lg-6" [routerLink]="'/paiements'">
-        <div class="card l-bg-gold widget-hover">
-          <div class="card-statistic-3 p-4">
-            <div class="card-icon card-icon-large"><i class="fa fa-money"></i></div>
-            <div class="mb-4">
-              <h5 class="card-title">Total des paiements</h5>
-            </div>
-            <div class="row align-items-center mb-2 d-flex">
-              <div class="col-8">
-                <h2 class="d-flex align-items-center mb-0">{{ Statistique?.TotalPaiements | number : "1.2-2" }} FCFA</h2>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> -->
       
-
-      <div class="container-fluid" *ngIf="canViewDashboard == false">
-        <div style="text-align: center" class="cartoon">
-          <img style="margin-bottom: 10px" width="70%" height="50%" class="img-fluid" src="assets/images/CantShow.png" alt="Vous ne pouvez pas consulter le dashboard" />
-          <h4>Vous n'avez pas le droit pour consulter le dashboard</h4>
+      <div class="compact-card teachers" [routerLink]="'/enseignants'">
+        <div class="compact-content">
+          <div class="compact-icon">
+            <i class="fa fa-briefcase"></i>
+          </div>
+          <div class="compact-title">Enseignants</div>
+          <h3 class="compact-value">{{ Statistique?.NbEnseignants || 0 }}</h3>
         </div>
       </div>
     </div>
+  
+</div>
+
+<div class="dashboard-container" *ngIf="canViewDashboard == false">
+  <div class="no-access">
+    <img width="200" height="150" src="assets/images/CantShow.png" alt="Accès refusé" />
+    <h4>Vous n'avez pas le droit pour consulter le dashboard</h4>
   </div>
 </div>
