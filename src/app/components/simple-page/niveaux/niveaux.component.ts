@@ -420,7 +420,7 @@ export class NiveauxComponent implements OnInit {
 trs += `</tr>`;
     })
   }
-    mainCell.innerHTML = `${addButtonHtml}<table class="table table-light fixed_header"><thead><tr style="background-color: #6f67fbc4;">${ths}</tr></thead><tbody>${trs}</tbody></table>`;
+    mainCell.innerHTML = `${addButtonHtml}<table class="table table-light fixed_header"><thead><tr style="background: linear-gradient(to right,#764ba2,#45b7d1);">${ths}</tr></thead><tbody>${trs}</tbody></table>`;
     newRow.appendChild(mainCell);
     targetRow.parentNode.insertBefore(newRow, targetRow.nextSibling);
 

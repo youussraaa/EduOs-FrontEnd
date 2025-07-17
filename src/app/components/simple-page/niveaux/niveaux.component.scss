@@ -1,6 +1,6 @@
 .card{
   margin-top: 30px;
-  background: linear-gradient(to left, #7366ff, #33B1EE);
+  background: white;
   table.table{
       width: 95%;               // Adjust this as needed (e.g. 60%, 800px, etc.)
       margin: 0;
@@ -14,15 +14,20 @@ td, th{
   border: none;
 }
 .card-header{
-  background: linear-gradient(to left, #7366ff, #33B1EE);
+  background: white;
 }
 .fs-4{
   color: white;
 }
-.btn-outline-primary, .igx-button--outlined{
+.btn-outline, .igx-button--outlined{
   background: transparent;
-  color: white;
+  color: #764ba2;
   border: white;
+  border-radius: 35px;
+  &:hover{
+    background: #764ba2;
+    color: white;
+  }
 }
 
 html, body {
@@ -54,5 +59,278 @@ html, body {
   overflow-y: auto; /* Ajoute un scroll si nécessaire */
 }
 h3{
-  color: white;
+  color: #764ba2;
+  margin-top: 20px;
+}
+
+.button-container {
+  gap: 5px; // Space between buttons
+  padding: 1px; // Some padding for demonstration
+  background: transparent; // A light background to show the buttons clearly
+  display: flex;
+  justify-content: stretch;
+}
+
+.custom-button {
+  gap: 8px; // Space between icon and text
+  padding: 10px 16px; // Vertical and horizontal padding
+  border: 1px solid #e0e0e0; // Light gray border
+  border-radius: 8px; // Rounded corners
+  background-color: #ffffff; // White background
+  color: #C62828; // Blue text color
+  font-size: 14px;
+  font-weight: 500; // Medium font weight
+  cursor: pointer;
+  transition: all 0.2s ease-in-out; // Smooth transitions for hover/active states
+
+  &:hover {
+    border-color: #C62828; // Slightly darker blue border on hover
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); // Subtle shadow on hover
+  }
+
+  &:active {
+    background-color: #f0f8ff; // Very light blue background on active
+    border-color: #C62828; // More pronounced blue border on active
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); // Inner shadow for pressed effect
+  }
+
+  i {
+    color: #C62828; // Blue icon color
+    font-size: 16px; // Icon size
+  }
+
+  span {
+    color: #C62828; // Blue text color
+  }
+}
+
+
+
+.custom-button-modif {
+  gap: 8px; // Space between icon and text
+  padding: 10px 16px; // Vertical and horizontal padding
+  border: 1px solid #5495C2; // Light gray border
+  border-radius: 8px; // Rounded corners
+  background-color: #ffffff; // White background
+  color: #5495C2; // Blue text color
+  font-size: 14px;
+  font-weight: 500; // Medium font weight
+  cursor: pointer;
+  transition: all 0.2s ease-in-out; // Smooth transitions for hover/active states
+
+  &:hover {
+    border-color: #5495C2; // Slightly darker blue border on hover
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); // Subtle shadow on hover
+  }
+
+  &:active {
+    background-color: #f0f8ff; // Very light blue background on active
+    border-color: #5495C2; // More pronounced blue border on active
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); // Inner shadow for pressed effect
+  }
+
+  i {
+    color: #5495C2; // Blue icon color
+    font-size: 16px; // Icon size
+  }
+
+  span {
+    color: #5495C2; // Blue text color
+  }
+}
+
+
+
+.custom-button-p {
+  gap: 8px; // Space between icon and text
+  padding: 5px 15px; // Vertical and horizontal padding
+  border: 1px solid #e0e0e0; // Light gray border
+  border-radius: 50px; // Rounded corners
+  background-color: #ffffff; // White background
+  color: #764ba2; // Blue text color
+  font-size: 20px;
+  font-weight: 500; // Medium font weight
+  cursor: pointer;
+  transition: all 0.2s ease-in-out; // Smooth transitions for hover/active states
+
+  &:hover {
+    border-color: #764ba2; // Slightly darker blue border on hover
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); // Subtle shadow on hover
+  }
+
+  &:active {
+    background-color: #f0f8ff; // Very light blue background on active
+    border-color: #000000; // More pronounced blue border on active
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); // Inner shadow for pressed effect
+  }
+
+  i {
+    color: #000000; // Blue icon color
+    font-size: 16px; // Icon size
+  }
+
+  span {
+    color: #000000; // Blue text color
+  }
+}
+
+
+
+
+/* Base styles for the table and responsive container */
+.card-body {
+  padding: 0.5rem; /* Corresponds to p-2 */
+}
+
+.table-responsive {
+  overflow-y: auto;
+  border: none;
+  /* max-height will be set dynamically via [style.maxHeight] in your HTML */
+}
+
+/* Fixed Header Table */
+.fixed_header {
+  width: 100%;
+  border-collapse: separate; /* Important for border-spacing and rounded corners */
+  border-spacing: 0 8px; /* Adds 8px vertical space between rows */
+  background: transparent;
+}
+
+.fixed_header thead {
+  top: 0;
+  background-color: #f3f4f6; /* Light gray background for header */
+  z-index: 10; /* Ensure header stays on top when scrolling */
+  border: none;
+  background: linear-gradient(to right,#764ba2,#45b7d1);
+}
+
+.fixed_header th {
+  padding: 0.75rem 1rem; /* Adjust padding as needed */
+  text-align: center;
+  color: #ffffff; /* Black text for header */
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow for header */
+  background: transparent;
+  border-radius: 35px; /* Semi-bold */
+}
+
+
+.fixed_header th:first-child {
+  width: 220px; /* "Plus de Details" column */
+}
+
+.fixed_header th:last-child {
+  width: 100px; /* "Actions" column */
+}
+
+
+
+/* Table Row Styling */
+.fixed_header tbody tr {
+  background-color: #ffffff; /* White background for rows */
+  border-radius: 8px; /* Rounded corners for each row */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04); /* Subtle shadow for rows */
+  transition: all 0.2s ease-in-out; /* Smooth transition for hover effects */
+  overflow: hidden; /* Ensures content respects border-radius */
+  font-size: 15px;
+}
+
+.fixed_header tbody tr:hover {
+  background-color: #f9fafb; /* Light hover background */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06); /* Slightly more pronounced shadow on hover */
+}
+
+/* Highlighted Row (e.g., for selected item) */
+.fixed_header tbody tr.highlighted-row {
+  background-color: #2563eb; /* Vibrant blue background */
+  color: #ffffff; /* White text */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.fixed_header tbody tr.highlighted-row:hover {
+  background-color: #1d4ed8; /* Slightly darker blue on hover */
+}
+
+/* Table Cell Styling */
+.fixed_header td {
+  padding: 0.75rem 1rem; /* Adjust padding as needed */
+  vertical-align: middle;
+  /* Text alignment will be handled by inline styles or specific classes based on data type */
+}
+
+/* Specific styling for the first and last cells to ensure rounded corners */
+.fixed_header tbody tr td:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.fixed_header tbody tr td:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* Status Dots */
+.status-dot {
+  display: inline-block;
+  width: 8px; /* w-2 */
+  height: 8px; /* h-2 */
+  border-radius: 50%; /* rounded-full */
+  margin-right: 0.5rem; /* mr-2 */
+  vertical-align: middle;
+}
+
+.status-dot.pending {
+  background-color: #ef4444; /* red-500 */
+}
+
+.status-dot.dispatch,
+.status-dot.completed {
+  background-color: #22c55e; /* green-500 */
+}
+
+/* Action Buttons/Icons */
+.action-button {
+  color: #6b7280; /* gray-500 */
+  font-size: 1.25rem; /* fs-5 */
+  margin: 0 0.5rem; /* mx-2 */
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.action-button:hover {
+  color: #1f2937; /* Darker gray on hover */
+}
+
+/* Specific colors for edit/delete icons if needed */
+.action-button.edit {
+  color: #fbbf24; /* text-warning (yellow-400) */
+}
+
+.action-button.delete {
+  color: #ef4444; /* text-danger (red-500) */
+}
+
+/* For the highlighted row, ensure icons are white */
+.highlighted-row .action-button {
+  color: #ffffff;
+}
+
+.highlighted-row .action-button:hover {
+  color: #e5e7eb; /* Slightly off-white on hover */
+}
+
+/* Avatar styling (if not using a component library) */
+.avatar {
+  width: 32px; /* Example size */
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 0.5rem;
+}
+
+/* Loading and Empty State Text */
+.loading-text,
+.empty-template-text {
+  font-style: italic;
+  color: #6b7280; /* muted-foreground */
 }
