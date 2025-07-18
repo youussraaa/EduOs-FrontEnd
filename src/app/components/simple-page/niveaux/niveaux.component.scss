@@ -45,6 +45,7 @@ html, body {
 .btn-success{
   border-radius: 50px;
 }
+
 .modal-title, .modal-body{
   color: black;
   font-size: medium;
@@ -203,6 +204,133 @@ h3{
   border: none;
   background: linear-gradient(to right,#764ba2,#45b7d1);
 }
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px); /* Equivalent to backdrop-blur-sm */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.modal {
+  position: relative;
+  z-index: 1000; /* higher than overlay */
+  width: 100%;
+  display: block;
+  max-width: 24rem; /* Equivalent to max-w-sm (384px) */
+  border-radius: 35px; /* Equivalent to rounded-xl */
+  background: white; /* Changed from transparent to white */
+  padding: 1.5rem; /* Added padding (24px) */
+  box-shadow: 5px 5px 5px 5px rgba(100, 100, 111, 0.2) ;
+  visibility: visible;
+  opacity: 1;
+  height: 65%;
+}
+
+.show{
+    visibility: visible;
+    opacity: 1;
+}
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 32px 24px 16px;
+        }
+
+        .icon-container {
+            width: 56px;
+            height: 56px;
+            background: #fee2e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .warning-icon {
+            width: 24px;
+            height: 24px;
+            background: #ef4444;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .warning-icon::before {
+            content: '!';
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+                .btn-cancel {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-cancel:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+        }
+        .modal-title-d {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .modal-body-d {
+            padding: 0 24px 24px;
+        }
+
+        .modal-description {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .modal-warning {
+            color: #9ca3af;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .modal-footer-d {
+            padding: 16px 24px 24px;
+            display: flex;
+            gap: 12px;
+            justify-content: stretch;
+        }
 
 .fixed_header th {
   padding: 0.75rem 1rem; /* Adjust padding as needed */

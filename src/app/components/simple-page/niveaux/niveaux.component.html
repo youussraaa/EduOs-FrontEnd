@@ -181,19 +181,52 @@
                   </span>
                 </td>
                 <td>
-                  <div>
-                      <div class="button-container">
+                  
+                    <div class="button-container">
                           <button class="custom-button-modif" (click)="openLevelModal(item, editlevelModal)">
                               <i class="fa-solid fa-pen-to-square"></i>
                               <span> Modifier</span>
                           </button>
 
-                          <button class="custom-button" (click)="DeleteNiveau(item.Niv_Id)">
-                              <i class="fa-solid fa-trash"></i>
-                              <span> Supprimer</span>
-                          </button>
-                      </div>  
-                    <!--<a class="action-button edit" title="Modifier Niveau" (click)="openLevelModal(item, editlevelModal)">
+                    <button class="custom-button" (click)="showModal(item.Niv_Id)">
+                        <i class="fa-solid fa-trash"></i>
+                        <span>Supprimer</span>
+                    </button>
+
+<div class="modal-overlay" [ngClass]="{'show': showModalFlag}">
+  <div class="modal">
+        <div class="modal-header">
+            <div class="icon-container">
+                <div class="warning-icon"></div>
+            </div>
+            <h2 class="modal-title-d">Supprimer le niveau</h2>
+        </div>
+        <div class="modal-body-d">
+            <p class="modal-description">Voulez-vous supprimer le niveau?</p>
+        </div>
+        <div class="modal-footer-d">
+            <button class="btn btn-cancel" (click)="hideModal()">Cancel</button>
+            <button class="btn btn-delete" (click)="confirmDelete()">Delete</button>
+        </div>
+      </div>
+</div>
+                        <!--  <div class="modal" id="confirmationModal" [ngClass]="{'show': showModal}">
+                              
+                                  <div class="modal-header">
+                                      <h3>Confirmation</h3>
+                                      <span class="close" (click)="closeModal()">&times;</span>
+                                  </div>
+                                  <div class="modal-body">
+                                      <p>Voulez-vous supprimer le niveau?</p>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button class="btn btn-cancel" (click)="closeModal()">Annuler</button>
+                                      <button class="btn btn-confirm" (click)="confirmDelete()">Supprimer</button>
+                                  </div>
+                              
+                          </div>
+                      </div> 
+                    <a class="action-button edit" title="Modifier Niveau" (click)="openLevelModal(item, editlevelModal)">
                       <i class="fa fa-edit"> Modifier</i>
                     </a>
                     <a class="action-button delete" title="Supprimer Niveau" (click)="DeleteNiveau(item.Niv_Id)">

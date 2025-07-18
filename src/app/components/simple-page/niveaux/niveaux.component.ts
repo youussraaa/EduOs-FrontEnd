@@ -8,6 +8,7 @@ import { Router } from "@angular/router";
 import Swal from 'sweetalert2'
 import { Title } from "@angular/platform-browser";
 
+
 interface Matiere {
   Mat_Id: string;
   Niv_Id: string;
@@ -34,6 +35,8 @@ interface Niveau {
   styleUrls: ["./niveaux.component.scss"],
 })
 export class NiveauxComponent implements OnInit {
+  showModalFlag = false;
+  niveauToDelete2 : any = null;
 @ViewChild('editsubjectModal',{static:false}) editsubjectModal: any;
 @ViewChild('subjectModal',{static:false}) subjectModal: any;
 
@@ -56,6 +59,8 @@ export class NiveauxComponent implements OnInit {
 
   formatter = new Intl.NumberFormat('en-US');
 
+  
+  niveauToDelete: number | null = null;
 
   gridConfig: any = {
     GetVisibleColumns: () => { return this.gridConfig.columns.filter((col) => col.visible); },
@@ -544,16 +549,74 @@ trs += `</tr>`;
     };
     this.isEditMode = false;
   }
+  
+
+
+
+
+      showModal(niv) {
+        this.niveauToDelete2 = niv;
+        this.showModalFlag = true;
+    }
+
+    hideModal() {
+      this.niveauToDelete2 = null;
+        this.showModalFlag = false;
+    }
+
+    confirmDelete() {
+      this.loader.show();
+
+      this.EduosService.DeleteNiveau(this.niveauToDelete2)
+        .subscribe(
+          (response) => {
+            console.log("response DeleteNiveau: ", response);
+            this.loader.hide();
+            this.hideModal();
+
+            if (response == null || response == false) {
+              Swal.fire(
+                "Erreur de suppression du niveau",
+                "Vous ne pouvez pas supprimer un niveau qui contient des classes.",
+                "error"
+              );
+            } else {
+              this.toastr.success("Niveau supprimé avec succès");
+              this.resumeConfig = this.resumeConfig.filter(
+                x => x.Niv_Id !== this.niveauToDelete2?.Niv_Id
+              );
+              this.gridConfig.data = this.gridConfig.data.filter(
+                x => x.Niv_Id !== this.niveauToDelete2?.Niv_Id
+              );
+              this.GetData()
+            }
+
+            this.niveauToDelete2 = null;
+          },
+          (error) => {
+            console.error("Erreur DeleteNiveau: ", error);
+            this.loader.hide();
+            this.toastr.error(error?.error, "Erreur de suppression du niveau");
+            this.hideModal();
+            this.niveauToDelete2 = null;
+          }
+        );
+      }
+
+
+
+
+
 
   DeleteNiveau(niv_id): void {
-    Swal.fire({
+    /*Swal.fire({
       title: "Voulez-vous supprimer le niveau?",
       showCancelButton: true,
       confirmButtonText: "Supprimer",
       confirmButtonColor: "red",
       cancelButtonText: "Annuler"
     }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
+      
       if (result.isConfirmed) {
         this.loader.show()
         this.EduosService.DeleteNiveau(niv_id)
@@ -577,7 +640,7 @@ trs += `</tr>`;
               this.toastr.error(error?.error, "Erreur de suppression du niveau");
             });
       }
-    });
+    });*/
 
 
   }
